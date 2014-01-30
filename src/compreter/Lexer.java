@@ -30,6 +30,18 @@ public class Lexer implements Patterns {
 		
 		String buffer = this.fillBuffer();
 		
+		matcher = COMMENT.matcher(buffer);
+		if(matcher.matches()){
+			if(matcher.group(1) != null){ // For multiline
+				offset += matcher.end(1);
+				return new Symbol(Symbol.Id.COMMENT, matcher.group(1));
+			}
+			else{ // For single line
+				offset += matcher.end(2);
+				return new Symbol(Symbol.Id.COMMENT, matcher.group(2));
+			}
+		}
+		
 		matcher = OPERATOR.matcher(buffer);
 		if(matcher.matches()){
 			offset += matcher.end(1);
