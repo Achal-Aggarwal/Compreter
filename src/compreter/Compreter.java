@@ -1,5 +1,7 @@
 package compreter;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 
 public class Compreter {
@@ -9,13 +11,19 @@ public class Compreter {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Lexer l = new Lexer("if(a===2)b=3;\nelse b=4;");
+		BufferedReader br = null;
+		Lexer l = new Lexer();
 		try {
 			Symbol s;
-			while(true){
-				s = l.nextToken();
-				if(s == null)break;
-				System.out.println(s.getClas() + "---" + s.value());
+			String sCurrentLine = null;
+			br = new BufferedReader(new FileReader(args[0]));
+			while ((sCurrentLine = br.readLine()) != null) {
+				l.parserLine(sCurrentLine);
+				while(true){
+					s = l.nextToken();
+					if(s == null)break;
+					System.out.println(s.getClas() + "---" + s.value());
+				}
 			}
 			
 		} catch (IOException | CloneNotSupportedException e) {
