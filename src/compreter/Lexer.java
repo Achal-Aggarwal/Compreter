@@ -5,10 +5,11 @@ import java.util.regex.Matcher;
 
 public class Lexer implements Patterns {
 	String source;
-	static int offset = 0;
+	static int offset;
 	static final int bufferSize = 50;
-	public Lexer(String source){
+	public void parserLine(String source){
 		this.source = source;
+		offset = 0;
 	}
 	private String fillBuffer(){
 		String buffer = null;
@@ -20,6 +21,7 @@ public class Lexer implements Patterns {
 		}
 		return buffer;
 	}
+	
 	private boolean isEOF(){
 		return offset == source.length();
 	}

@@ -11,12 +11,12 @@ public interface Patterns {
 	,OPERATOR =Pattern.compile(patternStart + "(\\{|\\}|\\(|\\)|[|]" +
 			"|;|,|\\?|:" +
 			"|<=?|>=?|={1,3}|!={0,2}" +
-			"|\\+\\+?}|--?|\\*|/|%" +
+			"|\\+\\+?|--?|\\*|/|%" +
 			"|&&|\\|{2}).*",Pattern.DOTALL)
 	
 	 
-	,COMMENT =Pattern.compile(patternStart + "(\\/\\*[\\w\\'\\s\\r\\n\\*]*\\*\\/).*|" //multiline
-			+ patternStart + "(//[^\\n]*).*",Pattern.DOTALL)
+	,COMMENT =Pattern.compile(/*patternStart + "(\\/\\*[\\w\\'\\s\\r\\n\\*]*\\*\\/).*|" *///multiline
+			patternStart + "(//[^\\n]*).*",Pattern.DOTALL)
 	
 	,IDENTIFIER_NAME = Pattern.compile(patternStart + "([A-Za-z]+[A-Za-z0-9]*)"+ "(" + patternEnd + "|" + OPERATOR.pattern() + ")", Pattern.DOTALL)
 	
