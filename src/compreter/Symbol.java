@@ -1,7 +1,7 @@
 package compreter;
 
 public class Symbol {
-	String clas;
+	Object clas;
 	String value;
 	public static enum Id {COMMENT, FLOATINGPOINT_LITERAL, IDENTIFIER_NAME, NUMERIC_LITERAL, STRING_LITERAL, KEYWORD, PUNCTUATORS, BOOLEAN_LITERAL};
 	Id code;
@@ -24,8 +24,12 @@ public class Symbol {
 		return this.value;
 	}
 	
-	public String getClas(){
+	public Object getAbs(){
 		return this.clas;
+	}
+	
+	public void setAbs(Object abs){
+		this.clas = abs;
 	}
 	
 	public Symbol.Id getCode(){
