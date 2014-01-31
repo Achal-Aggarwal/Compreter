@@ -1,21 +1,21 @@
 package compreter.parsertree;
 
-public class ArgumentListExpression extends Tree {
+public class VariableList extends Tree {
 	Tree item = null;
-	ArgumentListExpression items = null;
+	VariableList items = null;
 	
-	public ArgumentListExpression(Tree item){
+	public VariableList(Tree item){
 		this.item = item;
 	}
 	
-	public ArgumentListExpression(Tree item, ArgumentListExpression items){
+	public VariableList(Tree item, VariableList items){
 		this.item = item;
 		this.items = items;
 	}
 	
 	public String toString(){
 		String str = item.toString();
-		ArgumentListExpression itemsList = this.items;
+		VariableList itemsList = this.items;
 		
 		if(itemsList != null)
 			str = str + ", " + itemsList.toString();

@@ -12,4 +12,8 @@ public class BooleanExpression extends Tree {
 		this.operator = operator;
 		this.operandTwo = operandTwo;
 	}
+	
+	public String toString(){
+		return "(" + operandOne.toString() + " " + operator.getValue() + " " + operandTwo.toString() + ")";
+	}
 }

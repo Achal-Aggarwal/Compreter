@@ -14,17 +14,17 @@ public class Parser {
 		token = null;
 	}
 	public int parse(){
-		exps();
-
+		Tree tree = statementPro();
+		System.out.println(tree);
 		return 0;
 	}
 	
-	public Symbol accept(Symbol.Id code, boolean consume){
+	public Symbol accept(Symbol.Id code){
 		Symbol token = this.token;
 		try {
 			token = token == null ? lex.nextToken() : token;
 			if(token == null || code != token.getCode()){
-				this.token = !consume ? token : null;
+				this.token = token;
 				
 				return null;
 			}
@@ -37,12 +37,12 @@ public class Parser {
 		return token;
 	}
 	
-	public Symbol accept(Symbol.Id code, String lexeme, boolean consume){
+	public Symbol accept(Symbol.Id code, String lexeme){
 		Symbol token = this.token;
 		try {
 			token = token == null ? lex.nextToken() : token;
-			if(token == null || code != token.getCode() || token.getValue().compareTo(lexeme)!=0){
-				this.token = !consume ? token : null;
+			if(token == null || code != token.getCode() || token.getValue().matches(lexeme)==false){
+				this.token = token;
 				
 				return null;
 			}
@@ -53,13 +53,118 @@ public class Parser {
 		
 		this.token = null;
 		return token;
+	}
+	
+	private Tree statementPro(){
+		Tree condition = null,
+				truePart = null,
+				falsePart =  null,
+				expression;
+		
+		if(accept(Symbol.Id.KEYWORD,"if")!=null){
+			if((condition = jumpConditionPro()) != null){
+				if((truePart = statementPro()) != null){
+					if(accept(Symbol.Id.KEYWORD,"else")!=null){
+						if((falsePart = statementPro()) != null){
+							return new IfStatement(condition, truePart, falsePart);
+						}
+						
+						return null;
+					}
+					return new IfStatement(condition, truePart);
+				}
+			}
+			
+			return null;
+		}
+		
+		if((expression = variablesPro())!=null){
+			return expression;
+		}
+		
+		if((expression = expressionPro())!=null){
+			return expression;
+		}
+		
+		return null;
+	}
+	
+	private Tree jumpConditionPro(){
+		Tree expression = null;
+		
+		if(accept(Symbol.Id.PUNCTUATORS,"(")!=null){
+			if((expression = expressionPro()) != null){
+				if(accept(Symbol.Id.PUNCTUATORS,")")!=null){
+					return expression;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	private Tree variablesPro(){
+		Tree varDeclaration = null;
+		
+		if(accept(Symbol.Id.KEYWORD,"var")!=null){
+			if((varDeclaration = variableListPro()) != null){
+				accept(Symbol.Id.PUNCTUATORS,";");
+				return new VariableDeclarationStatement(varDeclaration);
+			}
+		}
+		
+		return null;
+	}
+	
+	private Tree variableListPro(){
+		Tree variable = null;
+		VariableList variables = null;
+		
+		if((variable = variablePro()) != null){
+			if(accept(Symbol.Id.PUNCTUATORS,",")!=null){
+				if((variables = (VariableList) variableListPro()) != null){
+					return new VariableList(variable, variables);
+				}
+				return null;
+			}
+			return new VariableList(variable);
+			
+		}
+		
+		return null;
+	}
+	
+	private Tree variablePro(){
+		Symbol identifier = null;
+		Tree expression = null;
+		
+		if((identifier = accept(Symbol.Id.IDENTIFIER_NAME))!=null){
+			if((accept(Symbol.Id.PUNCTUATORS,"="))!=null){
+				if((expression = expressionPro())!=null){
+					return new Variable(identifier, expression);
+				}
+				return null;
+			}
+			
+			return new Variable(identifier);
+		}
+		
+		return null;
+	}
+	
+	private Tree expressionOptPro(){
+		Tree expression = null;
+		if((expression=expressionPro())!=null){
+			return expression;
+		}
+		return null;
 	}
 	
 	private Tree expressionPro(){
 		Tree conditionalExpression = null, expression = null;
 		
 		if((conditionalExpression = conditionalExpressionPro()) != null){
-			if((accept(Symbol.Id.PUNCTUATORS,"=", true)) != null){
+			if((accept(Symbol.Id.PUNCTUATORS,"=")) != null){
 				if((expression = expressionPro()) != null){
 					return new Expression(conditionalExpression, expression);
 				}
@@ -67,7 +172,7 @@ public class Parser {
 				return null;
 			}
 			
-			return new Expression(conditionalExpression);
+			return conditionalExpression;
 		}
 		
 		return null;
@@ -77,9 +182,9 @@ public class Parser {
 		Tree conditionalExpression = null, truePart = null, falsePart = null;
 		
 		if((conditionalExpression = orExpressionPro()) != null){
-			if((accept(Symbol.Id.PUNCTUATORS,"?", true)) != null){
+			if((accept(Symbol.Id.PUNCTUATORS,"\\?")) != null){
 				if((truePart = expressionPro()) != null){
-					if((accept(Symbol.Id.PUNCTUATORS,":", true)) != null){
+					if((accept(Symbol.Id.PUNCTUATORS,":")) != null){
 						if((falsePart = expressionPro()) != null){
 							return new TernaryExpression(conditionalExpression, truePart, falsePart);
 						}
@@ -89,7 +194,7 @@ public class Parser {
 				return null;
 			}
 			
-			return new Expression(conditionalExpression);
+			return conditionalExpression;
 		}
 		
 		return null;
@@ -100,7 +205,7 @@ public class Parser {
 		Symbol operator = null;
 		
 		if((firstConditionalExpression = andExpressionPro()) != null){
-			if((operator = accept(Symbol.Id.PUNCTUATORS,"||", true)) != null){
+			if((operator = accept(Symbol.Id.PUNCTUATORS,"\\|\\|")) != null){
 				if((secondConditionalExpression = orExpressionPro()) != null){
 					return new BooleanExpression(firstConditionalExpression, 
 							operator, secondConditionalExpression);
@@ -109,7 +214,7 @@ public class Parser {
 				return null;
 			}
 			
-			return new Expression(firstConditionalExpression);
+			return firstConditionalExpression;
 		}
 		
 		return null;
@@ -120,7 +225,7 @@ public class Parser {
 		Symbol operator = null;
 		
 		if((firstConditionalExpression = equalityExpressionPro()) != null){
-			if((operator = accept(Symbol.Id.PUNCTUATORS,"&&", true)) != null){
+			if((operator = accept(Symbol.Id.PUNCTUATORS,"&&")) != null){
 				if((secondConditionalExpression = andExpressionPro()) != null){
 					return new BooleanExpression(firstConditionalExpression, 
 							operator, secondConditionalExpression);
@@ -129,7 +234,7 @@ public class Parser {
 				return null;
 			}
 			
-			return new Expression(firstConditionalExpression);
+			return firstConditionalExpression;
 		}
 		
 		return null;
@@ -139,9 +244,9 @@ public class Parser {
 		Tree firstConditionalExpression = null, secondConditionalExpression = null;
 		Symbol operator = null;
 		
-		if((firstConditionalExpression = equalityExpressionPro()) != null){
-			if((operator = accept(Symbol.Id.PUNCTUATORS,"===?", true)) != null){
-				if((secondConditionalExpression = relationalExpressionPro()) != null){
+		if((firstConditionalExpression = relationalExpressionPro()) != null){
+			if((operator = accept(Symbol.Id.PUNCTUATORS,"===?")) != null){
+				if((secondConditionalExpression = equalityExpressionPro()) != null){
 					return new BooleanExpression(firstConditionalExpression, 
 							operator, secondConditionalExpression);
 				}
@@ -149,7 +254,7 @@ public class Parser {
 				return null;
 			}
 			
-			return new Expression(firstConditionalExpression);
+			return firstConditionalExpression;
 		}
 		
 		return null;
@@ -160,7 +265,7 @@ public class Parser {
 		Symbol operator = null;
 		
 		if((firstConditionalExpression = additiveExpressionPro()) != null){
-			if((operator = accept(Symbol.Id.PUNCTUATORS,"(>=?|<=?)", true)) != null){
+			if((operator = accept(Symbol.Id.PUNCTUATORS,"(>=?|<=?)")) != null){
 				if((secondConditionalExpression = relationalExpressionPro()) != null){
 					return new BooleanExpression(firstConditionalExpression, 
 							operator, secondConditionalExpression);
@@ -169,7 +274,7 @@ public class Parser {
 				return null;
 			}
 			
-			return new Expression(firstConditionalExpression);
+			return firstConditionalExpression;
 		}
 		
 		return null;
@@ -180,7 +285,7 @@ public class Parser {
 		Symbol operator = null;
 		
 		if((firstConditionalExpression = multiplicativeExpressionPro()) != null){
-			if((operator = accept(Symbol.Id.PUNCTUATORS,"(+|-)", true)) != null){
+			if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\+|-)")) != null){
 				if((secondConditionalExpression = additiveExpressionPro()) != null){
 					return new BooleanExpression(firstConditionalExpression, 
 							operator, secondConditionalExpression);
@@ -189,7 +294,7 @@ public class Parser {
 				return null;
 			}
 			
-			return new Expression(firstConditionalExpression);
+			return firstConditionalExpression;
 		}
 		
 		return null;
@@ -200,7 +305,7 @@ public class Parser {
 		Symbol operator = null;
 		
 		if((firstConditionalExpression = unaryExpressionPro()) != null){
-			if((operator = accept(Symbol.Id.PUNCTUATORS,"(*|/)", true)) != null){
+			if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\*|/)")) != null){
 				if((secondConditionalExpression = multiplicativeExpressionPro()) != null){
 					return new BooleanExpression(firstConditionalExpression, 
 							operator, secondConditionalExpression);
@@ -209,58 +314,79 @@ public class Parser {
 				return null;
 			}
 			
-			return new Expression(firstConditionalExpression);
+			return firstConditionalExpression;
 		}
 		
 		return null;
 	}
 	
 	public Tree unaryExpressionPro(){
-		Tree opreand = null, memberExpression= null;
-		Symbol operator = null;
+		Tree operand = null, primaryExpression= null, expression = null;
+		Symbol operator = null, identifier = null;
 		
-		if((memberExpression = memberExpressionPro(false)) != null){
-			return memberExpression;
-		}
-		
-		if((operator = accept(Symbol.Id.PUNCTUATORS,"(+|-)", false)) != null){
-			if((opreand = unaryExpressionPro()) != null){
-				return new UnaryExpression(operator, opreand);
+		if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\+|-)")) != null){
+			if((operand = unaryExpressionPro()) != null){
+				return new UnaryExpression(operator, operand);
 			}
 			
 			return null;
 		}
 		
-		if((operator = accept(Symbol.Id.PUNCTUATORS,"(++|--)", false)) != null){
-			if((opreand = memberExpressionPro(true)) != null){
-				return new UnaryExpression(operator, opreand);
+		if((operator = accept(Symbol.Id.KEYWORD,"new")) != null){
+			if((operand = constructorCallPro()) != null){
+				return new UnaryExpression(operator, operand);
 			}
 			
 			return null;
 		}
 		
-		if((opreand = memberExpressionPro(false)) != null){
-			if((operator = accept(Symbol.Id.PUNCTUATORS,"(++|--)", true)) != null){
-				return new UnaryExpression(operator, opreand);
+		if((operator = accept(Symbol.Id.KEYWORD,"delete")) != null){
+			if((operand = memberExpressionPro()) != null){
+				return new UnaryExpression(operator, operand);
 			}
 			
 			return null;
 		}
 		
-		if((operator = accept(Symbol.Id.KEYWORD,"new", false)) != null){
-			if((opreand = constructorCallPro()) != null){
-				return new UnaryExpression(operator, opreand);
+		if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\+\\+|--)")) != null){
+			if((operand = memberExpressionPro()) != null){
+				return new UnaryExpression(operator, operand);
 			}
 			
 			return null;
 		}
 		
-		if((operator = accept(Symbol.Id.KEYWORD,"new", true)) != null){
-			if((opreand = memberExpressionPro(true)) != null){
-				return new UnaryExpression(operator, opreand);
+		if((identifier = accept(Symbol.Id.IDENTIFIER_NAME))!=null){			
+			if(accept(Symbol.Id.PUNCTUATORS,"\\(")!=null){
+				expression = argumentListPro();
+				if(accept(Symbol.Id.PUNCTUATORS,"\\)")!=null){
+					return new ConstructorCallExpression(identifier, expression);
+				}
+				return null;
 			}
 			
-			return null;
+			if(accept(Symbol.Id.PUNCTUATORS,"\\[")!=null){
+				if((expression = expressionPro()) != null){
+					if(accept(Symbol.Id.PUNCTUATORS,"\\]")!=null){
+						if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\+\\+|--)")) != null){
+							return new UnaryExpression(identifier,  
+										new MemberExpression(new PrimaryExpression(operator), 
+										expression), true);
+						}
+						
+						return new MemberExpression(new PrimaryExpression(identifier), 
+								expression);
+					}
+				}
+				return null;
+			}
+			
+			return new PrimaryExpression(identifier);
+		}
+		
+		if((primaryExpression = primaryExpressionPro()) != null){
+			
+			return primaryExpression;
 		}
 			
 		
@@ -271,10 +397,10 @@ public class Parser {
 		Tree argumentListOpt=null;
 		Symbol identifier;
 
-		if((identifier = accept(Symbol.Id.IDENTIFIER_NAME,true))!=null){
-			if(accept(Symbol.Id.PUNCTUATORS,"(",true)!=null){
-				argumentListOpt = argumentListOptPro();
-				if(accept(Symbol.Id.PUNCTUATORS,")",true)!=null){
+		if((identifier = accept(Symbol.Id.IDENTIFIER_NAME))!=null){
+			if(accept(Symbol.Id.PUNCTUATORS,"\\(")!=null){
+				argumentListOpt = argumentListPro();
+				if(accept(Symbol.Id.PUNCTUATORS,"\\)")!=null){
 					return new ConstructorCallExpression(identifier, argumentListOpt);
 				}
 				return null;
@@ -286,23 +412,12 @@ public class Parser {
 		return null;
 	}
 	
-	private Tree argumentListOptPro(){
-		Tree argumentListOpt=null;
-		Symbol identifier = null;
-
-		if((argumentListOpt = argumentListPro())!=null){
-				return new ConstructorCallExpression(identifier, argumentListOpt);
-		}
-			
-		return null;
-	}
-	
 	private Tree argumentListPro(){
 		Tree argumentList = null;
 		ArgumentListExpression argumentLists = null;
 		
 		if((argumentList = expressionPro()) != null){
-			if(accept(Symbol.Id.PUNCTUATORS,",",true)!=null){
+			if(accept(Symbol.Id.PUNCTUATORS,",")!=null){
 				if((argumentLists = (ArgumentListExpression) argumentListPro()) != null){
 					return new ArgumentListExpression(argumentList, argumentLists);
 				}
@@ -315,68 +430,63 @@ public class Parser {
 		return null;
 	}
 	
-	private Tree memberExpressionPro(boolean consume){
-		Tree pExpression = null, expression=null;
-		
-		if((pExpression = primaryExpressionPro(consume)) != null){
-			if(accept(Symbol.Id.PUNCTUATORS,"[",true)!=null){
+	private Tree memberExpressionPro(){
+		Tree expression=null;
+		Symbol identifier = null;
+		if((identifier = accept(Symbol.Id.IDENTIFIER_NAME))!=null){
+			if(accept(Symbol.Id.PUNCTUATORS,"\\[")!=null){
 				if((expression = expressionPro()) != null){
-					if(accept(Symbol.Id.PUNCTUATORS,"]",true)!=null){
-						return new MemberExpression(pExpression, expression);
+					if(accept(Symbol.Id.PUNCTUATORS,"\\]")!=null){
+						return new MemberExpression(new PrimaryExpression(identifier), expression);
 					}
 				}
 				return null;
 			}
-			else{
-				return new MemberExpression(pExpression);
-			}
+			
+			return new PrimaryExpression(identifier);
 		}
 		
 		return null;
 	}
 	
-	private Tree primaryExpressionPro(boolean consume){
+	private Tree primaryExpressionPro(){
 		Symbol pExpression = null;
 		Tree expression = null;
 		
-		if(accept(Symbol.Id.PUNCTUATORS,"(",false)!=null){
+		if(accept(Symbol.Id.PUNCTUATORS,"\\(")!=null){
 			if ((expression = expressionPro())!=null){
-				if(accept(Symbol.Id.PUNCTUATORS,"(",false)!=null){
-					return new PrimaryExpression(expression);
+				if(accept(Symbol.Id.PUNCTUATORS,"\\(")!=null){
+					return expression;
 				}
 			}
 			return null;
 		}
 		
-		if((pExpression = accept(Symbol.Id.IDENTIFIER_NAME,false))!=null){
+		if((pExpression = accept(Symbol.Id.NUMERIC_LITERAL))!=null){
 			return new PrimaryExpression(pExpression);
 		}
 		
-		if((pExpression = accept(Symbol.Id.NUMERIC_LITERAL,false))!=null){
+		if((pExpression = accept(Symbol.Id.FLOATINGPOINT_LITERAL))!=null){
 			return new PrimaryExpression(pExpression);
 		}
 		
-		if((pExpression = accept(Symbol.Id.FLOATINGPOINT_LITERAL,false))!=null){
+		if((pExpression = accept(Symbol.Id.STRING_LITERAL))!=null){
 			return new PrimaryExpression(pExpression);
 		}
 		
-		if((pExpression = accept(Symbol.Id.STRING_LITERAL,false))!=null){
+		if((pExpression = accept(Symbol.Id.BOOLEAN_LITERAL))!=null){
 			return new PrimaryExpression(pExpression);
 		}
 		
-		if((pExpression = accept(Symbol.Id.BOOLEAN_LITERAL,false))!=null){
+		if((pExpression = accept(Symbol.Id.BOOLEAN_LITERAL))!=null){
 			return new PrimaryExpression(pExpression);
 		}
 		
-		if((pExpression = accept(Symbol.Id.BOOLEAN_LITERAL,false))!=null){
+		if((pExpression = accept(Symbol.Id.KEYWORD,"null"))!=null){
 			return new PrimaryExpression(pExpression);
 		}
 		
-		if((pExpression = accept(Symbol.Id.KEYWORD,"null",false))!=null){
-			return new PrimaryExpression(pExpression);
-		}
-		
-		if((pExpression = accept(Symbol.Id.KEYWORD,"NaN",consume))!=null){
+		if((pExpression = accept(Symbol.Id.KEYWORD,"NaN"))!=null){
 			return new PrimaryExpression(pExpression);
 		}
 		

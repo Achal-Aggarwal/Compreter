@@ -11,7 +11,7 @@ public class Lexer implements Patterns {
 	static final int bufferSize = 200;
 	public Lexer(BufferedReader input) throws IOException{
 		this.input = input;
-		this.buffer = this.input.readLine();
+		this.buffer = this.input.readLine().concat(String.format("%n"));
 	}
 	
 	private void fillBuffer() throws IOException{
@@ -20,7 +20,7 @@ public class Lexer implements Patterns {
 		while(buffer.length() < bufferSize){
 			String nextLine = input.readLine();
 			if(nextLine != null){
-				buffer = buffer.concat("\n").concat(nextLine);
+				buffer = buffer.concat(nextLine).concat(String.format("%n"));
 			}
 			else{
 				break;

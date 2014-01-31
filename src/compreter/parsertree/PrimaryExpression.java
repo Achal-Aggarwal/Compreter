@@ -10,8 +10,8 @@ public class PrimaryExpression extends Tree {
 		this.symbol = s;
 	}
 	
-	public PrimaryExpression(Tree e){
-		this.expression = e;
+	public String toString(){
+		if(symbol != null)return symbol.getValue();
+		else return expression.toString();
 	}
-	
 }

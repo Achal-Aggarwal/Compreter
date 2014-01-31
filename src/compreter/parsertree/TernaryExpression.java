@@ -10,4 +10,8 @@ public class TernaryExpression extends Tree {
 		this.truePart = truePart;
 		this.falsePart = falsePart;
 	}
+	
+	public String toString(){
+		return "(" + condition.toString() + ") ? (" + truePart.toString() + ") : (" + falsePart.toString() + ")";
+	}
 }

@@ -14,4 +14,8 @@ public class ConstructorCallExpression extends Tree {
 		this.identifier = symbol;
 		this.argumentListOpt = argumentListOpt;
 	}
+	
+	public String toString(){
+		return identifier.getValue() + "( " + argumentListOpt.toString() + " )";
+	}
 }

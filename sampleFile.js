@@ -1,5 +1,1 @@
-a+b
-c*d
-a+b
-a+b
-c*d
+if(a<b)c=d;
