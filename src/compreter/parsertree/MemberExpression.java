@@ -10,6 +10,6 @@ public class MemberExpression extends Tree {
 	}
 	
 	public String toString(){
-		return primaryExpression.toString() + "[ " + expression.toString() + " ]"; 
+		return primaryExpression.toString() + "[" + expression.toString() + "]"; 
 	}
 }

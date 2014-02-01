@@ -11,6 +11,6 @@ public class Expression extends Tree {
 	}
 	
 	public String toString(){
-		return conditionalExpression.toString() + " = (" + assignmentExpression.toString() + ")";
+		return conditionalExpression.toString() + "=" + assignmentExpression.toString();
 	}
 }

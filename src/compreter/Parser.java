@@ -14,7 +14,7 @@ public class Parser {
 		token = null;
 	}
 	public int parse(){
-		Tree tree = statementPro();
+		Tree tree = programPro();
 		System.out.println(tree);
 		return 0;
 	}
@@ -55,11 +55,103 @@ public class Parser {
 		return token;
 	}
 	
+	private Tree programPro(){
+		Tree element = null;
+		Tree program = null;
+		
+		if((element = elementPro())!=null){
+			if((program = programPro())!=null){
+				return new Program(element, program);
+			}
+			
+			return element;
+		}
+
+		return null;
+	}
+	
+	private Tree elementPro(){
+		Symbol identifier = null;
+		Tree parameterList = null,
+				compoundStatement = null;
+		if(accept(Symbol.Id.KEYWORD, "function")!=null){
+			if((identifier = accept(Symbol.Id.IDENTIFIER_NAME))!=null){
+				if(accept(Symbol.Id.PUNCTUATORS, "\\(")!=null){
+					parameterList = parameterListPro();
+					
+					if(accept(Symbol.Id.PUNCTUATORS, "\\)")!=null){
+						if((compoundStatement = compoundStatementPro())!=null){
+							return new FunctionStatement(identifier, parameterList, compoundStatement);
+						}
+					}
+					
+				}
+				
+			}
+		}
+		
+		if((compoundStatement = statementsPro())!= null){
+			return compoundStatement;
+		}
+		
+		return null;
+	}
+	
+	private Tree parameterListPro(){
+		Symbol identifier = null;
+		Tree identifiers = null;
+		
+		if((identifier = accept(Symbol.Id.IDENTIFIER_NAME))!=null){
+			if(accept(Symbol.Id.PUNCTUATORS,",")!=null){
+				if((identifiers = parameterListPro())!=null){
+					return new ParameterList(new PrimaryExpression(identifier), identifiers);
+				}
+				
+				return null;
+			}
+			
+			return new PrimaryExpression(identifier);
+		}
+		
+		return null;
+	}
+	
+	private Tree compoundStatementPro(){
+		Tree statements = null;
+		
+		if(accept(Symbol.Id.PUNCTUATORS,"\\{")!=null){
+			statements = statementsPro();
+			if(accept(Symbol.Id.PUNCTUATORS,"\\}")!=null){
+				return statements;
+			}
+		}
+		
+		return null;
+	}
+	
+	private Tree statementsPro(){
+		Tree statement = null,
+				statements = null;
+		
+		if((statement = statementPro())!= null){
+				if((statements = statementsPro())!=null){
+					return new Statements(statement, statements);
+				}
+
+				return statement;
+		}
+		
+		return null;
+	}
+	
 	private Tree statementPro(){
 		Tree condition = null,
 				truePart = null,
 				falsePart =  null,
-				expression;
+				expression = null,
+				compoundStatement = null;
+		
+		accept(Symbol.Id.PUNCTUATORS,";");
 		
 		if(accept(Symbol.Id.KEYWORD,"if")!=null){
 			if((condition = jumpConditionPro()) != null){
@@ -78,6 +170,44 @@ public class Parser {
 			return null;
 		}
 		
+		if(accept(Symbol.Id.KEYWORD,"while")!=null){
+			if((condition = jumpConditionPro()) != null){
+				if((truePart = statementPro()) != null){
+					return new WhileStatement(condition, truePart);
+				}
+			}
+			
+			return null;
+		}
+		
+		if(accept(Symbol.Id.KEYWORD,"break")!=null){
+			if(accept(Symbol.Id.PUNCTUATORS,";")!=null){
+				return new LoopControlStatement("break");
+			}
+			
+			return null;
+		}
+		
+		if(accept(Symbol.Id.KEYWORD,"continue")!=null){
+			if(accept(Symbol.Id.PUNCTUATORS,";")!=null){
+				return new LoopControlStatement("continue");
+			}
+			
+			return null;
+		}
+		
+		if(accept(Symbol.Id.KEYWORD,"return")!=null){
+			if((expression = expressionPro())!=null){
+				return new ReturnStatement(expression);
+			}
+			
+			return new ReturnStatement();
+		}
+		
+		if((compoundStatement = compoundStatementPro())!=null){
+			return compoundStatement;
+		}
+		
 		if((expression = variablesPro())!=null){
 			return expression;
 		}
@@ -92,9 +222,9 @@ public class Parser {
 	private Tree jumpConditionPro(){
 		Tree expression = null;
 		
-		if(accept(Symbol.Id.PUNCTUATORS,"(")!=null){
+		if(accept(Symbol.Id.PUNCTUATORS,"\\(")!=null){
 			if((expression = expressionPro()) != null){
-				if(accept(Symbol.Id.PUNCTUATORS,")")!=null){
+				if(accept(Symbol.Id.PUNCTUATORS,"\\)")!=null){
 					return expression;
 				}
 			}
@@ -149,14 +279,6 @@ public class Parser {
 			return new Variable(identifier);
 		}
 		
-		return null;
-	}
-	
-	private Tree expressionOptPro(){
-		Tree expression = null;
-		if((expression=expressionPro())!=null){
-			return expression;
-		}
 		return null;
 	}
 	
@@ -381,6 +503,10 @@ public class Parser {
 				return null;
 			}
 			
+			if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\+\\+|--)")) != null){
+				return new UnaryExpression(operator, new PrimaryExpression(identifier), true);
+			}
+			
 			return new PrimaryExpression(identifier);
 		}
 		
@@ -455,8 +581,8 @@ public class Parser {
 		
 		if(accept(Symbol.Id.PUNCTUATORS,"\\(")!=null){
 			if ((expression = expressionPro())!=null){
-				if(accept(Symbol.Id.PUNCTUATORS,"\\(")!=null){
-					return expression;
+				if(accept(Symbol.Id.PUNCTUATORS,"\\)")!=null){
+					return new BracedExpression(expression);
 				}
 			}
 			return null;

@@ -16,6 +16,11 @@ public class ConstructorCallExpression extends Tree {
 	}
 	
 	public String toString(){
-		return identifier.getValue() + "( " + argumentListOpt.toString() + " )";
+		String str = identifier.getValue() + "(";
+		if(argumentListOpt!=null)
+			str += argumentListOpt.toString();
+		str += ")";
+		
+		return str;
 	}
 }

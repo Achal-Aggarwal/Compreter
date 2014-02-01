@@ -17,9 +17,9 @@ public class IfStatement extends Tree {
 	}
 	
 	public String toString(){
-		String str =  "if (" + condition.toString() + ") {\n\t" + truePart.toString() + "}\n";
+		String str =  "if(" + condition.toString() + "){" + truePart.toString() + "}";
 		if(falsePart != null)
-			str+="else {\n\t" + falsePart.toString() + "}\n";
+			str+="else{" + falsePart.toString() + "}";
 		
 		return str;
 	}

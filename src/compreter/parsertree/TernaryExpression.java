@@ -12,6 +12,6 @@ public class TernaryExpression extends Tree {
 	}
 	
 	public String toString(){
-		return "(" + condition.toString() + ") ? (" + truePart.toString() + ") : (" + falsePart.toString() + ")";
+		return condition.toString() + "?" + truePart.toString() + ":" + falsePart.toString();
 	}
 }

@@ -18,7 +18,7 @@ public class ArgumentListExpression extends Tree {
 		ArgumentListExpression itemsList = this.items;
 		
 		if(itemsList != null)
-			str = str + ", " + itemsList.toString();
+			str = str + "," + itemsList.toString();
 		
 		return str;
 	}

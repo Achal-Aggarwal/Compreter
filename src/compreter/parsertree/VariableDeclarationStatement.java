@@ -8,6 +8,6 @@ public class VariableDeclarationStatement extends Tree {
 	}
 	
 	public String toString(){
-		return "var " + varList.toString() + ";";
+		return "var " + varList.toString() + "";
 	}
 }

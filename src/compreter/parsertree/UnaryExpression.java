@@ -19,7 +19,7 @@ public class UnaryExpression extends Tree {
 	}
 
 	public String toString(){
-		if(!isPostFix)return operator.getValue() + " " + operand.toString();
-		else return "(" + operand.toString() + " " + operator.getValue() + ")";
+		if(!isPostFix)return operator.getValue() + operand.toString();
+		else return operand.toString() + operator.getValue();
 	}
 }

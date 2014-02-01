@@ -6,13 +6,13 @@ public interface Patterns {
 	String patternStart = "[\\s]*";
 	String patternEnd = "[\\s]+.*";
 	public static final Pattern 
-	KEYWORD=Pattern.compile(patternStart + "(var|function|if|else|while|break|continue|return|NaN|null|new|delete)"+ patternEnd, Pattern.DOTALL)
-	
-	,PUNCTUATORS =Pattern.compile(patternStart + "(\\{|\\}|\\(|\\)|\\[|\\]" +
+	PUNCTUATORS =Pattern.compile(patternStart + "(\\{|\\}|\\(|\\)|\\[|\\]" +
 			"|;|,|\\?|:" +
 			"|<=?|>=?|={1,3}|!={0,2}" +
 			"|\\+\\+?|--?|\\*|/|%" +
 			"|&&|[|]{2}).*",Pattern.DOTALL)
+			
+	,KEYWORD=Pattern.compile(patternStart + "(var|function|if|else|while|break|continue|return|NaN|null|new|delete)"+ "(" + patternEnd + "|" + PUNCTUATORS.pattern() + ")", Pattern.DOTALL)
 	
 	 
 	,COMMENT =Pattern.compile(patternStart + "(\\/\\*[\\w\\'\\s\\r\\n\\*]*\\*\\/).*|" //multiline
