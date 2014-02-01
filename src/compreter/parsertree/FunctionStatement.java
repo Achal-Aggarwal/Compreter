@@ -21,4 +21,22 @@ public class FunctionStatement extends Tree{
 		
 		return str;
 	}
+	
+	public String getCode(){
+		int paramPullCount = paramlist!=null ? paramlist.tLineCount() : 0;
+		
+		String str = this.printLineNumber(true) + 
+				"goto (" + String.valueOf(this.currentLineNumber + paramPullCount + compoundStatement.tLineCount()+3) +")\n";
+		
+		if(paramlist != null)
+			str += paramlist.getCode();
+		
+		str += compoundStatement.getCode();
+		
+		String returnAddress = Tree.getNextTemp();
+		str += this.printLineNumber(true) + returnAddress + " := pull\n";
+		str += this.printLineNumber(true) + "goto ("+ returnAddress +")\n";
+		
+		return str;
+	}
 }

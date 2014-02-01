@@ -8,6 +8,7 @@ public class PrimaryExpression extends Tree {
 	
 	public PrimaryExpression(Symbol s){
 		this.symbol = s;
+		this.place = this.symbol.getValue();
 	}
 	
 	public String toString(){
