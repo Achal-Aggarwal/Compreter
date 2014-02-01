@@ -23,4 +23,30 @@ public class Statements extends Tree{
 		
 		return str;
 	}
+	
+	public String getCode(){
+		String str = "";
+		
+		if(statement.toString()!=null)
+			str = statement.getCode();
+		
+		if(statements.toString()!=null){
+			str += statements.getCode();
+		}
+		
+		return str;
+	}
+	
+	public int tLineCount(){
+		int tCount = 0;
+		
+		if(statement.toString()!=null)
+			tCount = statement.tLineCount();
+		
+		if(statements.toString()!=null){
+			tCount += statements.tLineCount();
+		}
+		
+		return tCount;
+	}
 }

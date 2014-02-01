@@ -9,13 +9,16 @@ import compreter.parsertree.*;
 public class Parser {
 	Lexer lex;
 	Symbol token;
+	LoopControlStatement loopControl = null;
+	boolean foundLoopControl = false;
 	public Parser(BufferedReader input) throws IOException{
 		lex = new Lexer(input);
 		token = null;
 	}
 	public int parse(){
 		Tree tree = programPro();
-		System.out.println(tree);
+		//System.out.println(tree);
+		System.out.println(tree.getCode());
 		return 0;
 	}
 	
@@ -110,7 +113,7 @@ public class Parser {
 				return null;
 			}
 			
-			return new PrimaryExpression(identifier);
+			return new ParameterList(new PrimaryExpression(identifier));
 		}
 		
 		return null;
@@ -156,6 +159,7 @@ public class Parser {
 		if(accept(Symbol.Id.KEYWORD,"if")!=null){
 			if((condition = jumpConditionPro()) != null){
 				if((truePart = statementPro()) != null){
+					accept(Symbol.Id.PUNCTUATORS,";");
 					if(accept(Symbol.Id.KEYWORD,"else")!=null){
 						if((falsePart = statementPro()) != null){
 							return new IfStatement(condition, truePart, falsePart);
@@ -172,8 +176,14 @@ public class Parser {
 		
 		if(accept(Symbol.Id.KEYWORD,"while")!=null){
 			if((condition = jumpConditionPro()) != null){
+				foundLoopControl = false;
 				if((truePart = statementPro()) != null){
-					return new WhileStatement(condition, truePart);
+					Tree  loop = new WhileStatement(condition, truePart);
+					if(foundLoopControl)
+						loopControl.setLoop(loop);
+					loopControl = null;
+					foundLoopControl = false;
+					return loop; 
 				}
 			}
 			
@@ -182,7 +192,9 @@ public class Parser {
 		
 		if(accept(Symbol.Id.KEYWORD,"break")!=null){
 			if(accept(Symbol.Id.PUNCTUATORS,";")!=null){
-				return new LoopControlStatement("break");
+				loopControl = new LoopControlStatement("break");
+				foundLoopControl = true;
+				return loopControl;
 			}
 			
 			return null;
@@ -190,7 +202,9 @@ public class Parser {
 		
 		if(accept(Symbol.Id.KEYWORD,"continue")!=null){
 			if(accept(Symbol.Id.PUNCTUATORS,";")!=null){
-				return new LoopControlStatement("continue");
+				loopControl = new LoopControlStatement("continue");
+				foundLoopControl = true;
+				return loopControl;
 			}
 			
 			return null;
@@ -288,7 +302,7 @@ public class Parser {
 		if((conditionalExpression = conditionalExpressionPro()) != null){
 			if((accept(Symbol.Id.PUNCTUATORS,"=")) != null){
 				if((expression = expressionPro()) != null){
-					return new Expression(conditionalExpression, expression);
+					return new AssignmentExpression(conditionalExpression, expression);
 				}
 				
 				return null;
@@ -329,8 +343,8 @@ public class Parser {
 		if((firstConditionalExpression = andExpressionPro()) != null){
 			if((operator = accept(Symbol.Id.PUNCTUATORS,"\\|\\|")) != null){
 				if((secondConditionalExpression = orExpressionPro()) != null){
-					return new BooleanExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression);
+					return new BinaryExpression(firstConditionalExpression, 
+							operator, secondConditionalExpression, BinaryExpression.Type.BOOLEAN);
 				}
 				
 				return null;
@@ -349,8 +363,8 @@ public class Parser {
 		if((firstConditionalExpression = equalityExpressionPro()) != null){
 			if((operator = accept(Symbol.Id.PUNCTUATORS,"&&")) != null){
 				if((secondConditionalExpression = andExpressionPro()) != null){
-					return new BooleanExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression);
+					return new BinaryExpression(firstConditionalExpression, 
+							operator, secondConditionalExpression, BinaryExpression.Type.BOOLEAN);
 				}
 				
 				return null;
@@ -369,8 +383,8 @@ public class Parser {
 		if((firstConditionalExpression = relationalExpressionPro()) != null){
 			if((operator = accept(Symbol.Id.PUNCTUATORS,"===?")) != null){
 				if((secondConditionalExpression = equalityExpressionPro()) != null){
-					return new BooleanExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression);
+					return new BinaryExpression(firstConditionalExpression, 
+							operator, secondConditionalExpression, BinaryExpression.Type.RELATIONAL);
 				}
 				
 				return null;
@@ -389,8 +403,8 @@ public class Parser {
 		if((firstConditionalExpression = additiveExpressionPro()) != null){
 			if((operator = accept(Symbol.Id.PUNCTUATORS,"(>=?|<=?)")) != null){
 				if((secondConditionalExpression = relationalExpressionPro()) != null){
-					return new BooleanExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression);
+					return new BinaryExpression(firstConditionalExpression, 
+							operator, secondConditionalExpression, BinaryExpression.Type.RELATIONAL);
 				}
 				
 				return null;
@@ -409,8 +423,8 @@ public class Parser {
 		if((firstConditionalExpression = multiplicativeExpressionPro()) != null){
 			if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\+|-)")) != null){
 				if((secondConditionalExpression = additiveExpressionPro()) != null){
-					return new BooleanExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression);
+					return new BinaryExpression(firstConditionalExpression, 
+							operator, secondConditionalExpression, BinaryExpression.Type.AIRTHMETIC);
 				}
 				
 				return null;
@@ -429,8 +443,8 @@ public class Parser {
 		if((firstConditionalExpression = unaryExpressionPro()) != null){
 			if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\*|/)")) != null){
 				if((secondConditionalExpression = multiplicativeExpressionPro()) != null){
-					return new BooleanExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression);
+					return new BinaryExpression(firstConditionalExpression, 
+							operator, secondConditionalExpression, BinaryExpression.Type.AIRTHMETIC);
 				}
 				
 				return null;

@@ -23,4 +23,26 @@ public class IfStatement extends Tree {
 		
 		return str;
 	}
+	
+	public String getCode(){
+		String str =  condition.getCode() + 
+				this.printLineNumber(true) + 
+				"if " + condition.place + "==false " +
+				"goto (" + String.valueOf(this.currentLineNumber + truePart.tLineCount() + (falsePart != null ? 2 : 1)) + ")\n" +
+				truePart.getCode();
+		if(falsePart != null)
+			str +=	this.printLineNumber(true) + 
+				"goto(" + String.valueOf(this.currentLineNumber + falsePart.tLineCount() + 1) +")\n" +
+				falsePart.getCode();
+		
+		return str;
+	}
+	
+	public int tLineCount(){
+		int tline = condition.tLineCount() + truePart.tLineCount() + 2;
+		
+		if(falsePart != null)
+			tline += falsePart.tLineCount() + 1;
+		return tline;
+	}
 }
