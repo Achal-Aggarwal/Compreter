@@ -13,8 +13,26 @@ public class Program extends Tree{
 		String str = element.toString();
 		
 		if(program != null)
-			str += program.toString();
+			str += ";" + program.toString();
 		
 		return str;
+	}
+	
+	public String getCode(){
+		String str = element.getCode();
+		
+		if(program != null)
+			str += program.getCode();
+		
+		return str;
+	}
+	
+	public int tLineCount(){
+		int count = element.tLineCount();
+		
+		if(program != null)
+			count += program.tLineCount();
+		
+		return count;
 	}
 }
