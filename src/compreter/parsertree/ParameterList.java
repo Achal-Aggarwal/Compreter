@@ -1,32 +1,40 @@
 package compreter.parsertree;
 
+import compreter.Symbol;
+
 public class ParameterList extends Tree {
-	Tree identifier = null;
+	Identifier identifier = null;
 	Tree identifiers = null;
 	
-	public ParameterList(Tree identifier, Tree identifiers){
-		this.identifier = identifier;
+	public ParameterList(Symbol identifier, Tree identifiers){
+		this.identifier = new Identifier(identifier.getValue());
+		it.addIdentifier(this.identifier);
 		this.identifiers = identifiers;
 	}
 	
-	public ParameterList(Tree identifier) {
-		this.identifier = identifier;
+	public ParameterList(Symbol identifier) {
+		this.identifier = new Identifier(identifier.getValue());
+		it.addIdentifier(this.identifier);
 	}
 
 	public String toString(){
-		String str = identifier.toString();
+		String str = "";
 		
 		if(identifiers != null)
-			str += "," + identifiers.toString();
+			str += identifiers.toString() + ",";
+		
+		str += identifier.toString();
 		
 		return str;
 	}
 	
 	public String getCode(){
-		String str = this.printLineNumber(true) + identifier.place + " := pull" + "\n";
+		String str = "";
 		
 		if(identifiers != null)
 			str += identifiers.getCode();
+		
+		str += this.printLineNumber(true) + identifier.getNewName() + " := pull" + "\n";
 		
 		return str;
 	}

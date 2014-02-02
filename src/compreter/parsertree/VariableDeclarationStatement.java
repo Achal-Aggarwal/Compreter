@@ -10,4 +10,12 @@ public class VariableDeclarationStatement extends Tree {
 	public String toString(){
 		return "var " + varList.toString() + "";
 	}
+	
+	public String getCode(){
+		return varList.getCode();
+	}
+	
+	public int tLineCount(){
+		return varList.tLineCount();
+	}
 }

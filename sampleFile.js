@@ -1,5 +1,6 @@
-p=q+r;
-function add(z, y){
-	c=a+b;
+function add(a,b){
+	var c = 3+4;
+	return c;
 }
-p=q+r;
+var c=2,d=3;
+add(c,d);

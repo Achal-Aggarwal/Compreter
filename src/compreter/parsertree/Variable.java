@@ -3,23 +3,40 @@ package compreter.parsertree;
 import compreter.Symbol;
 
 public class Variable extends Tree {
-	Symbol identifier = null;
+	Identifier identifier = null;
 	Tree expression = null;
 	
-	public Variable(Symbol identifier){
-		this.identifier= identifier;
+	public Variable(Symbol i){
+		this.identifier = new Identifier(i.getValue());
+		it.addIdentifier(identifier);
 	}
 	
-	public Variable(Symbol identifier, Tree expression){
-		this.identifier= identifier;
+	public Variable(Symbol i, Tree expression){
+		this.identifier = new Identifier(i.getValue());
+		it.addIdentifier(identifier);
 		this.expression = expression;
 	}
 	
 	public String toString(){
-		String str = identifier.getValue();
+		String str = identifier.getNewName();
 		if(expression != null)
 			str += "=" + expression.toString();
 		
 		return str;
+	}
+	
+	public String getCode(){
+		String str = "";
+		if(expression != null){
+			str += expression.getCode() +
+				this.printLineNumber(true) + 
+				identifier.getNewName() + " := " + expression.place + "\n";
+		}
+		
+		return str;
+	}
+	
+	public int tLineCount(){
+		return expression.tLineCount() + 1;
 	}
 }

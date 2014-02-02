@@ -107,13 +107,13 @@ public class Parser {
 		if((identifier = accept(Symbol.Id.IDENTIFIER_NAME))!=null){
 			if(accept(Symbol.Id.PUNCTUATORS,",")!=null){
 				if((identifiers = parameterListPro())!=null){
-					return new ParameterList(new PrimaryExpression(identifier), identifiers);
+					return new ParameterList(identifier, identifiers);
 				}
 				
 				return null;
 			}
 			
-			return new ParameterList(new PrimaryExpression(identifier));
+			return new ParameterList(identifier);
 		}
 		
 		return null;

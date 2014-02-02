@@ -55,12 +55,12 @@ public class BinaryExpression extends Tree {
 		return this.operandOne.getCode() + 
 				this.operandTwo.getCode() +
 				this.printLineNumber(true) + 
-				"if " + this.operandOne.place + this.operator.getValue() + this.operandTwo.place + 
-				" goto (" + String.valueOf(this.currentLineNumber+3) + ")\n" + 
+				"if " + this.operandOne.place + " " +  this.operator.getValue() + " " +this.operandTwo.place + 
+				" goto := " + String.valueOf(this.currentLineNumber+3) + "\n" + 
 				this.printLineNumber(true) +
 				this.place + " := false\n" +
 				this.printLineNumber(true) +
-				"goto (" + String.valueOf(this.currentLineNumber+2) + ")\n"+
+				"goto := " + String.valueOf(this.currentLineNumber+2) + "\n"+
 				this.printLineNumber(true) +
 				this.place + " := true\n";
 	}
