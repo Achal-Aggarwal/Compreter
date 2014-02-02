@@ -19,7 +19,7 @@ public class PrimaryExpression extends Tree {
 	}
 	
 	public String toString(){
-		if(identifer != null)return this.identifer.getNewName();
+		if(identifer != null)return this.identifer.getNewName(false);
 		else if(literal != null)return this.literal.getValue();
 		else return expression.toString();
 	}

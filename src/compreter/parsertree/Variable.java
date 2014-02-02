@@ -18,7 +18,7 @@ public class Variable extends Tree {
 	}
 	
 	public String toString(){
-		String str = identifier.getNewName();
+		String str = identifier.getNewName(false);
 		if(expression != null)
 			str += "=" + expression.toString();
 		

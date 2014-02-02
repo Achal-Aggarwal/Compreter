@@ -22,11 +22,15 @@ public class Identifier {
 	
 	public static String getNextName(){
 		if(nextInt < firstAvail.length())
-			return "_" + firstAvail.substring(nextInt, ++nextInt) + "_";
+			return firstAvail.substring(nextInt, ++nextInt);
 		return "$";
 	}
 	
 	public String getOldName(){return this.oldName;}
 	
-	public String getNewName(){return this.newName;}
+	public String getNewName(){return "_"+this.newName+"_";}
+	
+	public String getNewName(boolean b){
+		return this.newName;
+	}
 }

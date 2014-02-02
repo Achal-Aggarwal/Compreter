@@ -3,14 +3,12 @@ package compreter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-
 import compreter.parsertree.*;
 
 public class Parser {
 	Lexer lex;
 	Symbol token;
-	LoopControlStatement loopControl = null;
-	boolean foundLoopControl = false;
+	
 	public Parser(BufferedReader input) throws IOException{
 		lex = new Lexer(input);
 		token = null;
@@ -176,14 +174,10 @@ public class Parser {
 		
 		if(accept(Symbol.Id.KEYWORD,"while")!=null){
 			if((condition = jumpConditionPro()) != null){
-				foundLoopControl = false;
 				if((truePart = statementPro()) != null){
-					Tree  loop = new WhileStatement(condition, truePart);
-					if(foundLoopControl)
-						loopControl.setLoop(loop);
-					loopControl = null;
-					foundLoopControl = false;
-					return loop; 
+					
+					return new WhileStatement(condition, truePart);
+					
 				}
 			}
 			
@@ -192,9 +186,7 @@ public class Parser {
 		
 		if(accept(Symbol.Id.KEYWORD,"break")!=null){
 			if(accept(Symbol.Id.PUNCTUATORS,";")!=null){
-				loopControl = new LoopControlStatement("break");
-				foundLoopControl = true;
-				return loopControl;
+				return new LoopControlStatement("break");
 			}
 			
 			return null;
@@ -202,9 +194,7 @@ public class Parser {
 		
 		if(accept(Symbol.Id.KEYWORD,"continue")!=null){
 			if(accept(Symbol.Id.PUNCTUATORS,";")!=null){
-				loopControl = new LoopControlStatement("continue");
-				foundLoopControl = true;
-				return loopControl;
+				return new LoopControlStatement("continue");
 			}
 			
 			return null;

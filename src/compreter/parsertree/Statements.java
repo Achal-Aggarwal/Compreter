@@ -1,5 +1,7 @@
 package compreter.parsertree;
 
+import java.util.ArrayList;
+
 public class Statements extends Tree{
 	Tree statement = null,
 			statements = null;
@@ -11,7 +13,7 @@ public class Statements extends Tree{
 	
 	public String toString(){
 		String str = null;
-		
+
 		if(statement.toString()!=null)
 			str = statement.toString();
 		
@@ -48,5 +50,20 @@ public class Statements extends Tree{
 		}
 		
 		return tCount;
+	}
+	
+	public ArrayList<Tree> findLoopControlStatements(){
+		ArrayList<Tree> loopControlstatements = new ArrayList<Tree>();
+		
+		if(this.statement instanceof LoopControlStatement)
+			loopControlstatements.add(this.statement);
+		
+		if(this.statements instanceof LoopControlStatement)
+			loopControlstatements.add(this.statements);
+		
+		if(this.statements  instanceof Statements)
+			loopControlstatements.addAll(((Statements)this.statements).findLoopControlStatements());
+
+		return loopControlstatements;
 	}
 }

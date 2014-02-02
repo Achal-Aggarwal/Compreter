@@ -23,7 +23,7 @@ public class ParameterList extends Tree {
 		if(identifiers != null)
 			str += identifiers.toString() + ",";
 		
-		str += identifier.toString();
+		str += identifier.getNewName(false);
 		
 		return str;
 	}

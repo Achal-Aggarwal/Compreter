@@ -10,7 +10,7 @@ public class LoopControlStatement extends Tree {
 	}
 	
 	public String toString(){
-		return type + ";";
+		return type;
 	}
 	
 	public void setLoop(Tree loop){

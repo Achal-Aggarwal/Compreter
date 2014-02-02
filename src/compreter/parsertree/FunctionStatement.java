@@ -15,7 +15,7 @@ public class FunctionStatement extends Tree{
 	}
 	
 	public String toString(){
-		String str = "function " + name.getNewName() + "(";
+		String str = "function " + name.getNewName(false) + "(";
 		if(paramlist != null)
 			str += paramlist.toString();
 		str += "){" + compoundStatement.toString() + "}";
