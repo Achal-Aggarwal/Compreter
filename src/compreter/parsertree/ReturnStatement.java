@@ -18,4 +18,23 @@ public class ReturnStatement extends Tree {
 		
 		return str;
 	}
+	
+	public String getCode(){
+		String str = expression.getCode();
+		
+		String tempName = Tree.getNextTemp();
+		
+		str += this.printLineNumber(true) + 
+			tempName + " := pull\n" + 
+			this.printLineNumber(true) + 
+			"push := " + expression.place + "\n" +  
+			this.printLineNumber(true) + 
+			"goto := " + tempName + "\n";
+		
+		return str;
+	}
+	
+	public int tLineCount(){
+		return expression.tLineCount() + 3;
+	}
 }

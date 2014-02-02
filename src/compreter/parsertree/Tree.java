@@ -9,6 +9,8 @@ public abstract class Tree {
 	
 	String place = null;
 	
+	static IdentifierTable it = new IdentifierTable();
+	
 	int currentLineNumber = -1;
 	
 	public String getCode(){return "";}

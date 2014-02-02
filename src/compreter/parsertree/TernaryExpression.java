@@ -19,8 +19,8 @@ public class TernaryExpression extends Tree {
 	public String getCode(){
 		String str =  condition.getCode() + 
 				this.printLineNumber(true) + 
-				"if " + condition.place + "==false " +
-				"goto (" + String.valueOf(this.currentLineNumber + truePart.tLineCount() + 3) + ")\n";
+				"if " + condition.place + " == false " +
+				"goto := " + String.valueOf(this.currentLineNumber + truePart.tLineCount() + 3) + "\n";
 		
 		String trueCode = truePart.getCode();
 		
@@ -28,7 +28,7 @@ public class TernaryExpression extends Tree {
 				this.printLineNumber(true) +
 				this.place + " := " + truePart.place + "\n" + 
 				this.printLineNumber(true) + 
-				"goto(" + String.valueOf(this.currentLineNumber + falsePart.tLineCount() + 2) +")\n";
+				"goto := " + String.valueOf(this.currentLineNumber + falsePart.tLineCount() + 2) +"\n";
 		
 		String falseCode = falsePart.getCode();
 			str += (falseCode == "" ? "" : falseCode) +  

@@ -25,7 +25,8 @@ public class UnaryExpression extends Tree {
 	}
 	
 	public String getCode(){
-		String str = this.printLineNumber(true) + this.operand.getCode() + this.place + " := ";
+		String str = this.printLineNumber(true) + 
+				this.operand.getCode() + this.place + " := ";
 		
 		if(!this.isPostFix){
 			str += this.operator.getValue() + this.place;

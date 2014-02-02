@@ -3,16 +3,24 @@ package compreter.parsertree;
 import compreter.Symbol;
 
 public class PrimaryExpression extends Tree {
-	Symbol symbol = null;
+	Identifier identifer = null;
 	Tree expression = null;
+	Symbol literal = null;
 	
 	public PrimaryExpression(Symbol s){
-		this.symbol = s;
-		this.place = this.symbol.getValue();
+		if(Symbol.Id.IDENTIFIER_NAME == s.getCode()){
+			this.identifer = it.getIdentifier(s.getValue());
+			this.place = this.identifer.getNewName();
+		}
+		else{
+			this.literal = s;
+			this.place = s.getValue();
+		}
 	}
 	
 	public String toString(){
-		if(symbol != null)return symbol.getValue();
+		if(identifer != null)return this.identifer.getNewName();
+		else if(literal != null)return this.literal.getValue();
 		else return expression.toString();
 	}
 }

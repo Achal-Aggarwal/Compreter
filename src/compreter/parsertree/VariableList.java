@@ -22,4 +22,22 @@ public class VariableList extends Tree {
 		
 		return str;
 	}
+	
+	public String getCode(){
+		String str = item.getCode();
+		
+		if(this.items != null)
+			str += this.items.getCode();
+		
+		return str;
+	}
+	
+	public int tLineCount(){
+		int count = item.tLineCount();
+		
+		if(this.items != null)
+			count += this.items.tLineCount();
+		
+		return count;
+	}
 }
