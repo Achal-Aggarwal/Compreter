@@ -6,12 +6,14 @@ public class FunctionStatement extends Tree{
 	Identifier name = null;
 	Tree paramlist = null;
 	Tree compoundStatement = null;
+	String lableLast = null;
 	
 	public FunctionStatement(Symbol name, Tree paramList, Tree compoundStatement){
 		this.name = new Identifier(name.getValue());
 		it.addIdentifier(this.name);
 		this.paramlist = paramList;
 		this.compoundStatement = compoundStatement;
+		this.lableLast = Tree.getNextLabel();
 	}
 	
 	public String toString(){
@@ -39,6 +41,24 @@ public class FunctionStatement extends Tree{
 		String returnAddress = Tree.getNextTemp();
 		str += this.printLineNumber(true) + returnAddress + " := pull\n";
 		str += this.printLineNumber(true) + "goto := "+ returnAddress +"\n";
+		
+		return str;
+	}
+	
+	public String getLabelCode(){
+		String str = this.printLineNumber(true) + "goto := " + this.lableLast +"\n";
+		
+		str += this.printLineNumber(true) + "label := " + name.getNewName() + "\n";
+				
+		if(paramlist != null)
+			str += paramlist.getLabelCode();
+		
+		str += compoundStatement.getLabelCode();
+		
+		String returnAddress = Tree.getNextTemp();
+		str += this.printLineNumber(true) + returnAddress + " := pull\n";
+		str += this.printLineNumber(true) + "goto := "+ returnAddress +"\n";
+		str += this.printLineNumber(true) + "label := "+ this.lableLast +"\n";
 		
 		return str;
 	}

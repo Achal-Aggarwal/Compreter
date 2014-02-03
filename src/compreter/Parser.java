@@ -16,7 +16,8 @@ public class Parser {
 	public int parse(){
 		Tree tree = programPro();
 		//System.out.println(tree);
-		System.out.println(tree.getCode());
+		//System.out.println(tree.getCode());
+		System.out.println(tree.getLabelCode());
 		return 0;
 	}
 	

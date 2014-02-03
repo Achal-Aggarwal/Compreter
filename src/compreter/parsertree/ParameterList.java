@@ -34,7 +34,7 @@ public class ParameterList extends Tree {
 		if(identifiers != null)
 			str += identifiers.getCode();
 		
-		str += this.printLineNumber(true) + identifier.getNewName() + " := pull" + "\n";
+		str += this.printLineNumber(true) + identifier.getNewName() + " := pop" + "\n";
 		
 		return str;
 	}

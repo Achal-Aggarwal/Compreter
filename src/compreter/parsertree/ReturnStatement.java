@@ -25,7 +25,7 @@ public class ReturnStatement extends Tree {
 		String tempName = Tree.getNextTemp();
 		
 		str += this.printLineNumber(true) + 
-			tempName + " := pull\n" + 
+			tempName + " := pop\n" + 
 			this.printLineNumber(true) + 
 			"push := " + expression.place + "\n" +  
 			this.printLineNumber(true) + 

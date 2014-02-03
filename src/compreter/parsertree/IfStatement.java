@@ -4,16 +4,20 @@ public class IfStatement extends Tree {
 	Tree condition = null, 
 			truePart = null, 
 			falsePart = null;
-	
+	String labelTrue = null, labelFalse = null;
+
 	public IfStatement(Tree condition, Tree truePart){
 		this.condition = condition;
 		this.truePart = truePart;
+		this.labelTrue = Tree.getNextLabel();
 	}
 	
 	public IfStatement(Tree condition, Tree truePart, Tree falsePart){
 		this.condition = condition;
 		this.truePart = truePart;
 		this.falsePart = falsePart;
+		this.labelTrue = Tree.getNextLabel();
+		this.labelFalse = Tree.getNextLabel();
 	}
 	
 	public String toString(){
@@ -36,6 +40,32 @@ public class IfStatement extends Tree {
 				falsePart.getCode();
 		
 		return str;
+	}
+	
+	public String getLabelCode(){
+		if(falsePart == null){
+			return condition.getLabelCode() + 
+					this.printLineNumber(true) + 
+					"goto := " + this.labelFalse +
+					" if " + condition.place + " == false \n" + 
+					truePart.getLabelCode() + 
+					this.printLineNumber(true) +
+					"label := " + this.labelFalse;
+		}
+		else{
+			return condition.getLabelCode() + 
+					this.printLineNumber(true) + 
+					"goto := " + this.labelFalse +
+					" if " + condition.place + " == false \n" + 
+					truePart.getLabelCode() + 
+					this.printLineNumber(true) +
+					"goto := " + this.labelTrue + "\n" +
+					this.printLineNumber(true) +
+					"label := " + this.labelFalse + "\n" + 
+					falsePart.getLabelCode() +
+					this.printLineNumber(true) +
+					"label := " + this.labelTrue + "\n";
+		}
 	}
 	
 	public int tLineCount(){

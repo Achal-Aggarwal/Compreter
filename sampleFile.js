@@ -1,2 +1,12 @@
 var a;
-a=5*3/1*5;
+while(a){
+if(a){
+	a=2;
+}
+else{
+	a=3;
+}
+}
+function add(b,c){
+	return b+c;
+}

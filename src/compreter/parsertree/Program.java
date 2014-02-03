@@ -27,6 +27,15 @@ public class Program extends Tree{
 		return str;
 	}
 	
+	public String getLabelCode(){
+		String str = element.getLabelCode();
+		
+		if(program != null)
+			str += program.getLabelCode();
+		
+		return str;
+	}
+	
 	public int tLineCount(){
 		int count = element.tLineCount();
 		

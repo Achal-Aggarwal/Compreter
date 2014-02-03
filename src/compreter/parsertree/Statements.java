@@ -39,6 +39,19 @@ public class Statements extends Tree{
 		return str;
 	}
 	
+	public String getLabelCode(){
+		String str = "";
+		
+		if(statement.toString()!=null)
+			str = statement.getLabelCode();
+		
+		if(statements.toString()!=null){
+			str += statements.getLabelCode();
+		}
+		
+		return str;
+	}
+	
 	public int tLineCount(){
 		int tCount = 0;
 		
