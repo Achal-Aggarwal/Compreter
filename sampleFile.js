@@ -1,6 +1,2 @@
 var a;
-while(a){
-	while(a){a=1;continue;break;}
-	break;
-	continue;
-}
+a=5*3/1*5;

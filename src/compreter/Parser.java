@@ -389,58 +389,90 @@ public class Parser {
 	public Tree relationalExpressionPro(){
 		Tree firstConditionalExpression = null, secondConditionalExpression = null;
 		Symbol operator = null;
-		
+
 		if((firstConditionalExpression = additiveExpressionPro()) != null){
 			if((operator = accept(Symbol.Id.PUNCTUATORS,"(>=?|<=?)")) != null){
 				if((secondConditionalExpression = relationalExpressionPro()) != null){
 					return new BinaryExpression(firstConditionalExpression, 
 							operator, secondConditionalExpression, BinaryExpression.Type.RELATIONAL);
 				}
-				
+
 				return null;
 			}
-			
+
 			return firstConditionalExpression;
 		}
-		
+
 		return null;
 	}
 	
 	public Tree additiveExpressionPro(){
 		Tree firstConditionalExpression = null, secondConditionalExpression = null;
-		Symbol operator = null;
-		
+
 		if((firstConditionalExpression = multiplicativeExpressionPro()) != null){
-			if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\+|-)")) != null){
-				if((secondConditionalExpression = additiveExpressionPro()) != null){
-					return new BinaryExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression, BinaryExpression.Type.AIRTHMETIC);
-				}
-				
-				return null;
+			if((secondConditionalExpression = additiveExpressionDashPro(firstConditionalExpression)) != null){
+				return secondConditionalExpression;
 			}
-			
+
 			return firstConditionalExpression;
 		}
-		
+
+		return null;
+	}
+
+	public Tree additiveExpressionDashPro(Tree firstConditionalExpression){
+		Tree secondConditionalExpression = null;
+		Symbol operator = null;
+
+		if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\+|-)")) != null){
+			if((secondConditionalExpression = multiplicativeExpressionPro()) != null){
+				firstConditionalExpression =  new BinaryExpression(firstConditionalExpression, 
+						operator, secondConditionalExpression, BinaryExpression.Type.AIRTHMETIC);
+
+				if((secondConditionalExpression = additiveExpressionDashPro(firstConditionalExpression)) != null){
+					return secondConditionalExpression;
+				}
+
+				return firstConditionalExpression;
+			}
+
+			return null;
+		}
+
 		return null;
 	}
 	
 	public Tree multiplicativeExpressionPro(){
 		Tree firstConditionalExpression = null, secondConditionalExpression = null;
-		Symbol operator = null;
-		
+
 		if((firstConditionalExpression = unaryExpressionPro()) != null){
-			if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\*|/)")) != null){
-				if((secondConditionalExpression = multiplicativeExpressionPro()) != null){
-					return new BinaryExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression, BinaryExpression.Type.AIRTHMETIC);
+			if((secondConditionalExpression = multiplicativeExpressionDashPro(firstConditionalExpression)) != null){
+				return secondConditionalExpression;
+			}
+
+			return firstConditionalExpression;
+		}
+
+		return null;
+	}
+
+	public Tree multiplicativeExpressionDashPro(Tree firstConditionalExpression){
+		Tree secondConditionalExpression = null;
+		Symbol operator = null;
+
+		if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\*|/)")) != null){
+			if((secondConditionalExpression = unaryExpressionPro()) != null){
+				firstConditionalExpression =  new BinaryExpression(firstConditionalExpression, 
+						operator, secondConditionalExpression, BinaryExpression.Type.AIRTHMETIC);
+
+				if((secondConditionalExpression = multiplicativeExpressionDashPro(firstConditionalExpression)) != null){
+					return secondConditionalExpression;
 				}
 				
-				return null;
+				return firstConditionalExpression;
 			}
 			
-			return firstConditionalExpression;
+			return null;
 		}
 		
 		return null;
