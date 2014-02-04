@@ -336,7 +336,7 @@ public class Parser {
 			if((operator = accept(Symbol.Id.PUNCTUATORS,"\\|\\|")) != null){
 				if((secondConditionalExpression = orExpressionPro()) != null){
 					return new BinaryExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression, BinaryExpression.Type.BOOLEAN);
+							operator, secondConditionalExpression);
 				}
 				
 				return null;
@@ -356,7 +356,7 @@ public class Parser {
 			if((operator = accept(Symbol.Id.PUNCTUATORS,"&&")) != null){
 				if((secondConditionalExpression = andExpressionPro()) != null){
 					return new BinaryExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression, BinaryExpression.Type.BOOLEAN);
+							operator, secondConditionalExpression);
 				}
 				
 				return null;
@@ -376,7 +376,7 @@ public class Parser {
 			if((operator = accept(Symbol.Id.PUNCTUATORS,"===?")) != null){
 				if((secondConditionalExpression = equalityExpressionPro()) != null){
 					return new BinaryExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression, BinaryExpression.Type.RELATIONAL);
+							operator, secondConditionalExpression);
 				}
 				
 				return null;
@@ -396,7 +396,7 @@ public class Parser {
 			if((operator = accept(Symbol.Id.PUNCTUATORS,"(>=?|<=?)")) != null){
 				if((secondConditionalExpression = relationalExpressionPro()) != null){
 					return new BinaryExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression, BinaryExpression.Type.RELATIONAL);
+							operator, secondConditionalExpression);
 				}
 
 				return null;
@@ -429,7 +429,7 @@ public class Parser {
 		if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\+|-)")) != null){
 			if((secondConditionalExpression = multiplicativeExpressionPro()) != null){
 				firstConditionalExpression =  new BinaryExpression(firstConditionalExpression, 
-						operator, secondConditionalExpression, BinaryExpression.Type.AIRTHMETIC);
+						operator, secondConditionalExpression);
 
 				if((secondConditionalExpression = additiveExpressionDashPro(firstConditionalExpression)) != null){
 					return secondConditionalExpression;
@@ -465,7 +465,7 @@ public class Parser {
 		if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\*|/)")) != null){
 			if((secondConditionalExpression = unaryExpressionPro()) != null){
 				firstConditionalExpression =  new BinaryExpression(firstConditionalExpression, 
-						operator, secondConditionalExpression, BinaryExpression.Type.AIRTHMETIC);
+						operator, secondConditionalExpression);
 
 				if((secondConditionalExpression = multiplicativeExpressionDashPro(firstConditionalExpression)) != null){
 					return secondConditionalExpression;

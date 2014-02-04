@@ -1,6 +1,5 @@
-function add(b,c){
-	return b+c;
-	return b*c;
-}
-var a,d;
-add(a,d);
+var a,b,c;
+a=b+c;
+b=c*a;
+c=a||b;
+a=b<c;
