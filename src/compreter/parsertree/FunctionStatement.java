@@ -7,6 +7,7 @@ public class FunctionStatement extends Tree{
 	Tree paramlist = null;
 	Tree compoundStatement = null;
 	String lableLast = null;
+	String returnAddress = null;
 	
 	public FunctionStatement(Symbol name, Tree paramList, Tree compoundStatement){
 		this.name = new Identifier(name.getValue());
@@ -14,6 +15,17 @@ public class FunctionStatement extends Tree{
 		this.paramlist = paramList;
 		this.compoundStatement = compoundStatement;
 		this.lableLast = Tree.getNextLabel();
+		this.returnAddress = Tree.getNextTemp();
+		
+		if (compoundStatement instanceof Statements)
+			((Statements)compoundStatement).setReturnAddresses(this.returnAddress);
+		
+		if (compoundStatement instanceof ReturnStatement)
+			((ReturnStatement)compoundStatement).setReturnAddress(this.returnAddress);
+	}
+	
+	public void setReturnStatements(){
+		
 	}
 	
 	public String toString(){
@@ -49,14 +61,13 @@ public class FunctionStatement extends Tree{
 		String str = this.printLineNumber(true) + "goto := " + this.lableLast +"\n";
 		
 		str += this.printLineNumber(true) + "label := " + name.getNewName() + "\n";
-				
+
+		str += this.printLineNumber(true) + this.returnAddress + " := pop\n";
 		if(paramlist != null)
 			str += paramlist.getLabelCode();
 		
 		str += compoundStatement.getLabelCode();
-		
-		String returnAddress = Tree.getNextTemp();
-		str += this.printLineNumber(true) + returnAddress + " := pull\n";
+
 		str += this.printLineNumber(true) + "goto := "+ returnAddress +"\n";
 		str += this.printLineNumber(true) + "label := "+ this.lableLast +"\n";
 		

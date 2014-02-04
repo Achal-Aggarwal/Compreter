@@ -2,12 +2,16 @@ package compreter.parsertree;
 
 public class ReturnStatement extends Tree {
 	Tree expression = null;
-	
+	String returnAddress = null;
 	public ReturnStatement(){
 	}
 	
 	public ReturnStatement(Tree exp){
 		this.expression = exp;
+	}
+	
+	public void setReturnAddress(String address){
+		this.returnAddress = address;
 	}
 	
 	public String toString(){
@@ -22,14 +26,10 @@ public class ReturnStatement extends Tree {
 	public String getCode(){
 		String str = expression.getCode();
 		
-		String tempName = Tree.getNextTemp();
-		
 		str += this.printLineNumber(true) + 
-			tempName + " := pop\n" + 
-			this.printLineNumber(true) + 
 			"push := " + expression.place + "\n" +  
 			this.printLineNumber(true) + 
-			"goto := " + tempName + "\n";
+			"goto := " + this.returnAddress + "\n";
 		
 		return str;
 	}

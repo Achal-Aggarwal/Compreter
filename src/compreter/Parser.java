@@ -8,6 +8,7 @@ import compreter.parsertree.*;
 public class Parser {
 	Lexer lex;
 	Symbol token;
+	Tree function = null;
 	
 	public Parser(BufferedReader input) throws IOException{
 		lex = new Lexer(input);

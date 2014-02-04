@@ -11,6 +11,17 @@ public class Statements extends Tree{
 		this.statements = statements;
 	}
 	
+	public void setReturnAddresses(String returnAddress){
+		if(statement instanceof ReturnStatement)
+			((ReturnStatement) statement).setReturnAddress(returnAddress);
+		
+		if(statements instanceof ReturnStatement)
+			((ReturnStatement) statements).setReturnAddress(returnAddress);
+		
+		if(statements instanceof Statements)
+			((Statements) statements).setReturnAddresses(returnAddress);
+	}
+	
 	public String toString(){
 		String str = null;
 
