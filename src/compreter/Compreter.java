@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import compreter.optimizer.ConstantFolding;
+import compreter.optimizer.ExpressionSimplification;
+import compreter.optimizer.Optimizer;
+
 public class Compreter {
 
 	/**
@@ -15,7 +19,16 @@ public class Compreter {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(args[0]));
 			Parser parser = new Parser(br);
-			parser.parse();
+			String threeCode = (String) parser.parse();
+			
+			Optimizer optimizers[] = {new ConstantFolding(), new ExpressionSimplification()};
+			
+			
+			for(Optimizer optimizer : optimizers){
+				threeCode = optimizer.optimize(threeCode);
+			}
+			
+			System.out.println(threeCode);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

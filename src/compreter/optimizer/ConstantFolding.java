@@ -3,9 +3,9 @@ package compreter.optimizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ConstantFolding {
+public class ConstantFolding extends Optimizer {
 	static Pattern numExp = Pattern.compile("[\\s]*([\\d]+)[\\s]*([^\\w\\d\\s]+)[\\s]*([\\d]+)[\\s]*",Pattern.DOTALL);
-	public static String optimize(String in){
+	public String optimize(String in){
 		String out = "";
 		
 		String lines[] = in.split("\n");

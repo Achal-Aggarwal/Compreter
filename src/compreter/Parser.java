@@ -16,15 +16,15 @@ public class Parser {
 		lex = new Lexer(input);
 		token = null;
 	}
-	public int parse(){
+	public Object parse(){
 		Tree tree = programPro();
 		Tree.printLineNumber = false;
 		//System.out.println(tree);
 		//System.out.println(tree.getCode());
 		//System.out.println(tree.getLabelCode());
 		//System.out.println(tree.getSimpleCode());
-		System.out.println(ConstantFolding.optimize(tree.getSimpleCode()));
-		return 0;
+		//System.out.println(ConstantFolding.optimize(tree.getSimpleCode()));
+		return tree.getSimpleCode();
 	}
 	
 	public Symbol accept(Symbol.Id code){
