@@ -9,6 +9,8 @@ public abstract class Tree {
 	
 	static int lastLabel = 0;
 	
+	public static boolean printLineNumber = true;
+
 	String place = null;
 	
 	static IdentifierTable it = new IdentifierTable();
@@ -28,7 +30,7 @@ public abstract class Tree {
 	
 	public String printLineNumber(boolean printAlso){
 		currentLineNumber  = lineNumber++;
-		return printAlso ? String.valueOf(currentLineNumber) + ". " : "";
+		return printLineNumber && printAlso  ? String.valueOf(currentLineNumber) + ". " : "";
 	}
 	
 	public int tLineCount(){return 0;}
