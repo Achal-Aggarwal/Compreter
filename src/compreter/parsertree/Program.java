@@ -36,6 +36,15 @@ public class Program extends Tree{
 		return str;
 	}
 	
+	public String getSimpleCode(){
+		String str = element.getSimpleCode();
+		
+		if(program != null)
+			str += program.getSimpleCode();
+		
+		return str;
+	}
+	
 	public int tLineCount(){
 		int count = element.tLineCount();
 		

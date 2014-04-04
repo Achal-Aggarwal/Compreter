@@ -3,7 +3,8 @@ package compreter.parsertree;
 public class ArgumentListExpression extends Tree {
 	Tree item = null;
 	ArgumentListExpression items = null;
-	
+	static String argList = "";
+
 	public ArgumentListExpression(Tree item){
 		this.item = item;
 	}
@@ -45,6 +46,35 @@ public class ArgumentListExpression extends Tree {
 			str = str + itemsList.getCode();
 		
 		return str;
+	}
+	
+	public String getSimpleCode(){
+		String str = "";
+		String itemCode = item.getCode();
+
+		if(itemCode != ""){
+			String nextTemp = Tree.getNextTemp();
+			str = item.getCode() +
+					this.printLineNumber(true) + 
+					nextTemp + " := " + item.place + "\n";
+			ArgumentListExpression.argList = nextTemp  + ", " + ArgumentListExpression.argList;
+		}
+		else{
+			ArgumentListExpression.argList = item.place + ", " + ArgumentListExpression.argList;
+		}
+		
+		ArgumentListExpression itemsList = this.items;
+		
+		if(itemsList != null){
+			str = str + itemsList.getSimpleCode();
+		}
+			
+		
+		return str;
+	}
+	
+	public String getArgumentList(){ 
+		return ArgumentListExpression.argList.substring(0,ArgumentListExpression.argList.length() - 2);
 	}
 	
 	public int tLineCode(){

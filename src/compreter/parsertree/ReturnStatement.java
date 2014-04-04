@@ -34,6 +34,15 @@ public class ReturnStatement extends Tree {
 		return str;
 	}
 	
+	public String getSimpleCode(){
+		String str = expression.getCode();
+		
+		str += this.printLineNumber(true) + 
+			"return := " + expression.place + "\n";
+		
+		return str;
+	}
+	
 	public int tLineCount(){
 		return expression.tLineCount() + 3;
 	}

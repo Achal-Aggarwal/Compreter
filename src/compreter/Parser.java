@@ -19,7 +19,8 @@ public class Parser {
 		Tree.printLineNumber = false;
 		//System.out.println(tree);
 		//System.out.println(tree.getCode());
-		System.out.println(tree.getLabelCode());
+		//System.out.println(tree.getLabelCode());
+		System.out.println(tree.getSimpleCode());
 		return 0;
 	}
 	

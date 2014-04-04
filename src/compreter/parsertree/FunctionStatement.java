@@ -73,4 +73,18 @@ public class FunctionStatement extends Tree{
 		
 		return str;
 	}
+	
+	public String getSimpleCode(){
+		String str= "";
+		
+		str += this.printLineNumber(true) + "function := " + name.getNewName();
+
+		str += " (" + paramlist.getSimpleCode() + ")\n";
+		
+		str += compoundStatement.getSimpleCode();
+
+		str += this.printLineNumber(true) + "return := function "+ name.getNewName() +"\n";
+		
+		return str;
+	}
 }

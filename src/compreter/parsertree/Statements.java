@@ -63,6 +63,19 @@ public class Statements extends Tree{
 		return str;
 	}
 	
+	public String getSimpleCode(){
+		String str = "";
+		
+		if(statement.toString()!=null)
+			str = statement.getSimpleCode();
+		
+		if(statements.toString()!=null){
+			str += statements.getSimpleCode();
+		}
+		
+		return str;
+	}
+	
 	public int tLineCount(){
 		int tCount = 0;
 		

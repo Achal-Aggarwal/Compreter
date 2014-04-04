@@ -39,6 +39,17 @@ public class ParameterList extends Tree {
 		return str;
 	}
 	
+	public String getSimpleCode(){
+		String str = "";
+		
+		if(identifiers != null)
+			str += identifiers.getSimpleCode() + ", ";
+		
+		str += identifier.getNewName();
+		
+		return str;
+	}
+	
 	public int tLineCount(){
 		int  count= 1;
 		
