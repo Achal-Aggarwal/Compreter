@@ -1,5 +1,3 @@
-function add(a,b)
-{
-	return a + b;
-}
-add(a + 5,b)
+var c,a,b;
+c = 3 * 4;
+c = 1 + 2;

@@ -3,6 +3,8 @@ package compreter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+
+import compreter.optimizer.ConstantFolding;
 import compreter.parsertree.*;
 
 public class Parser {
@@ -20,7 +22,8 @@ public class Parser {
 		//System.out.println(tree);
 		//System.out.println(tree.getCode());
 		//System.out.println(tree.getLabelCode());
-		System.out.println(tree.getSimpleCode());
+		//System.out.println(tree.getSimpleCode());
+		System.out.println(ConstantFolding.optimize(tree.getSimpleCode()));
 		return 0;
 	}
 	
