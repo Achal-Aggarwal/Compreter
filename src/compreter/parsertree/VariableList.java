@@ -32,6 +32,15 @@ public class VariableList extends Tree {
 		return str;
 	}
 	
+	public String getSimpleCode(){
+		String str = item.getSimpleCode();
+		
+		if(this.items != null)
+			str += this.items.getSimpleCode();
+		
+		return str;
+	}
+	
 	public int tLineCount(){
 		int count = item.tLineCount();
 		

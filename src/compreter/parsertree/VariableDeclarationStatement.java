@@ -15,6 +15,10 @@ public class VariableDeclarationStatement extends Tree {
 		return varList.getCode();
 	}
 	
+	public String getSimpleCode(){
+		return varList.getSimpleCode();
+	}
+	
 	public int tLineCount(){
 		return varList.tLineCount();
 	}

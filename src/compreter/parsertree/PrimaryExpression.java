@@ -18,6 +18,8 @@ public class PrimaryExpression extends Tree {
 		}
 	}
 	
+	public String getSimpleCode(){return "ERROR";}
+	
 	public String toString(){
 		if(identifer != null)return this.identifer.getNewName(false);
 		else if(literal != null)return this.literal.getValue();

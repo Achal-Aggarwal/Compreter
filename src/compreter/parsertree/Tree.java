@@ -19,7 +19,7 @@ public abstract class Tree {
 	
 	public String getCode(){return "";}
 	public String getLabelCode(){return this.getCode();}
-	public String getSimpleCode(){return this.getLabelCode();}
+	public abstract String getSimpleCode();
 	
 	public static String getNextTemp(){
 		return "Temp"+String.valueOf(lastTemp++);

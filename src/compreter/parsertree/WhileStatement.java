@@ -56,6 +56,20 @@ public class WhileStatement extends Tree {
 				"label := " + this.labelLast + "\n";
 	}
 	
+	public String getSimpleCode(){
+		return condition.getSimpleCode() + 
+				this.printLineNumber(true) +
+				"label := " + this.labelFirst + "\n" + 
+				this.printLineNumber(true) + 
+				"goto := " + this.labelLast + 
+				" if " + condition.place + " == false \n" +
+				body.getSimpleCode() +
+				this.printLineNumber(true) + 
+				"goto := " + this.labelFirst +"\n" + 
+				this.printLineNumber(true) + 
+				"label := " + this.labelLast + "\n";
+	}
+	
 	public int tLineCount(){
 		return body.tLineCount() + 2;
 	}

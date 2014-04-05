@@ -31,6 +31,10 @@ public class BinaryExpression extends Tree {
 	public String getLabelCode(){
 		return this.getCode();
 	}
+	
+	public String getSimpleCode(){
+		return this.getCode();
+	}
 
 	public int tLineCount(){
 		return this.operandOne.tLineCount() + this.operandTwo.tLineCount() + 1;

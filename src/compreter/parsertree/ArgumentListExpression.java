@@ -57,10 +57,10 @@ public class ArgumentListExpression extends Tree {
 			str = item.getCode() +
 					this.printLineNumber(true) + 
 					nextTemp + " := " + item.place + "\n";
-			ArgumentListExpression.argList = nextTemp  + ", " + ArgumentListExpression.argList;
+			ArgumentListExpression.argList += nextTemp  + ", ";
 		}
 		else{
-			ArgumentListExpression.argList = item.place + ", " + ArgumentListExpression.argList;
+			ArgumentListExpression.argList += item.place + ", ";
 		}
 		
 		ArgumentListExpression itemsList = this.items;

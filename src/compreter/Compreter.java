@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import compreter.optimizer.ConstantFolding;
 import compreter.optimizer.ConstantPropogation;
+import compreter.optimizer.CopyPropogation;
+import compreter.optimizer.DeadCodeElimination;
 import compreter.optimizer.ExpressionSimplification;
 import compreter.optimizer.Optimizer;
 
@@ -22,18 +24,11 @@ public class Compreter {
 			Parser parser = new Parser(br);
 			String threeCode = (String) parser.parse();
 			
-			Optimizer optimizers[] = {
-					new ConstantFolding(), 
-					new ExpressionSimplification(),
-					new ConstantPropogation()
-			};
+			System.out.println("ORIGINAL\n" + threeCode);
 			
-			for(int i=0;i<2;i++)
-				for(Optimizer optimizer : optimizers){
-					threeCode = optimizer.optimize(threeCode);
-				}
+			Optimize o = new Optimize();
 			
-			System.out.println(threeCode);
+			System.out.println("\n\nOTIMIZED\n" + o.optimizeAt(threeCode, 2));
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

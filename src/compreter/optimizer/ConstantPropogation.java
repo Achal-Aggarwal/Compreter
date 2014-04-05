@@ -7,8 +7,9 @@ import java.util.regex.Pattern;
 public class ConstantPropogation extends Optimizer {
 
 	static Pattern exp = Pattern.compile("[\\s]*([\\d]+)[\\s]*",Pattern.DOTALL);
-	static Pattern idopidexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*)[\\s]*([^\\w\\d\\s]+)[\\s]*([^0-9 ][\\w]*)[\\s]*",Pattern.DOTALL);
+	static Pattern idopidexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*([^\\w\\d\\s]+)[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*",Pattern.DOTALL);
 	static Pattern idexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*)[\\s]*",Pattern.DOTALL);
+	static Pattern calididexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*)[\\s]*\\([\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*,[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*\\)[\\s]*",Pattern.DOTALL);
 	public String optimize(String in){
 		String out = "";
 		HashMap<String, Integer> hm = new HashMap<String, Integer>();
@@ -50,7 +51,24 @@ public class ConstantPropogation extends Optimizer {
 						
 						out += parts[0] + " := " + idOne + "\n";
 					} else {
-						out += line + "\n";
+						matcher = calididexp.matcher(parts[1]);
+						if(matcher.matches()){
+							Object functName = matcher.group(1);
+							Object idOne = matcher.group(2);
+							Object idTwo = matcher.group(3);
+							
+							if(hm.containsKey(idOne)){
+								idOne = hm.get(idOne);
+							}
+							
+							if(hm.containsKey(idTwo)){
+								idTwo = hm.get(idTwo);
+							}
+							
+							out += parts[0] + " := " + functName + " ( "+ idOne + ", " + idTwo + " )\n";
+						} else {
+							out += line + "\n";
+						}
 					}
 				}
 

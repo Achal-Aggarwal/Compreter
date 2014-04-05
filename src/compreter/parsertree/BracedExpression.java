@@ -14,6 +14,11 @@ public class BracedExpression extends Tree {
 	public String getCode(){
 		return expression.getCode();
 	}
+	
+	public String getSimpleCode(){
+		return expression.getSimpleCode();
+	}
+	
 	public int tLineCount(){
 		return expression.tLineCount();
 	}

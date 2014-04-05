@@ -68,6 +68,32 @@ public class IfStatement extends Tree {
 		}
 	}
 	
+	public String getSimpleCode(){
+		if(falsePart == null){
+			return condition.getSimpleCode() + 
+					this.printLineNumber(true) + 
+					"goto := " + this.labelFalse +
+					" if " + condition.place + " == false \n" + 
+					truePart.getSimpleCode() + 
+					this.printLineNumber(true) +
+					"label := " + this.labelFalse;
+		}
+		else{
+			return condition.getSimpleCode() + 
+					this.printLineNumber(true) + 
+					"goto := " + this.labelFalse +
+					" if " + condition.place + " == false \n" + 
+					truePart.getSimpleCode() + 
+					this.printLineNumber(true) +
+					"goto := " + this.labelTrue + "\n" +
+					this.printLineNumber(true) +
+					"label := " + this.labelFalse + "\n" + 
+					falsePart.getSimpleCode() +
+					this.printLineNumber(true) +
+					"label := " + this.labelTrue + "\n";
+		}
+	}
+	
 	public int tLineCount(){
 		int tline = condition.tLineCount() + truePart.tLineCount() + 2;
 		

@@ -26,6 +26,10 @@ public class LoopControlStatement extends Tree {
 		}
 	}
 	
+	public String getSimpleCode(){
+		return this.getCode();
+	}
+	
 	public int tLineCount(){
 		return 1;
 	}

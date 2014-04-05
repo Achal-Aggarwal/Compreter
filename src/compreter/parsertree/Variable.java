@@ -36,6 +36,17 @@ public class Variable extends Tree {
 		return str;
 	}
 	
+	public String getSimpleCode(){
+		String str = "";
+		if(expression != null){
+			str += expression.getSimpleCode() +
+				this.printLineNumber(true) + 
+				identifier.getNewName() + " := " + expression.place + "\n";
+		}
+		
+		return str;
+	}
+	
 	public int tLineCount(){
 		return expression.tLineCount() + 1;
 	}
