@@ -49,6 +49,14 @@ public class ExpressionSimplification extends Optimizer{
 				
 				else if((op == "||" && b == 1))
 					result = 1;
+				else{
+					if (flag){
+						result = id + " " + op + " " + b;
+					} else{
+						result = b + " " + op + " " + id;
+					}
+				}
+					
 
 				out += parts[0] + " := " + result + "\n";
 			} else {
