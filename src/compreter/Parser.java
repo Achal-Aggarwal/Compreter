@@ -17,8 +17,11 @@ public class Parser {
 		token = null;
 	}
 	public Object parse(){
-		Tree tree = programPro();
 		Tree.printLineNumber = false;
+		Tree.generateNewNames(false);
+		
+		Tree tree = programPro();
+		
 		//System.out.println(tree);
 		//System.out.println(tree.getCode());
 		//System.out.println(tree.getLabelCode());

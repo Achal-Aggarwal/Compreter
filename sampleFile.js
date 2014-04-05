@@ -1,4 +1,7 @@
-function add(a,b){
-	return a + b;
+function main(a,b,c)
+{
+	b = 1;
+	a = 1;
+	c = a + b * 2;
+	return c/4;
 }
-var e,c = add(2*2,e);

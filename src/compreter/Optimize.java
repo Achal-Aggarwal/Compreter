@@ -14,7 +14,7 @@ public class Optimize {
 			new ConstantFolding()
 			 ,new ExpressionSimplification()
 			,new ConstantPropogation()
-			 , new CopyPropogation()
+			, new CopyPropogation()
 			, new DeadCodeElimination()
 	};
 

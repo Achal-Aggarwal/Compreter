@@ -1,12 +1,14 @@
 package compreter.optimizer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DeadCodeElimination extends Optimizer {
-	static Pattern idnumexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*([^\\w\\d\\s]+)[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*",Pattern.DOTALL);
+	static Pattern idnumexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*([^\\w\\d\\s.]+)[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*",Pattern.DOTALL);
 	static Pattern idornumexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*",Pattern.DOTALL);
 	static Pattern calididexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*)[\\s]*\\([\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*,[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*\\)[\\s]*",Pattern.DOTALL);
 	
@@ -14,6 +16,8 @@ public class DeadCodeElimination extends Optimizer {
 		String out = "";
 		
 		String lines[] = in.split("\n");
+		ArrayList<String> codeOrder = new ArrayList<String>();
+		
 		HashMap<String, String> exphm = new HashMap<String, String>();
 		HashMap<String, Integer> counthm = new HashMap<String, Integer>();
 		for(String line : lines){
@@ -27,6 +31,7 @@ public class DeadCodeElimination extends Optimizer {
 				
 				if(exphm.containsKey(op1)){
 					counthm.put(op1, counthm.get(op1)+1);
+					
 				} 
 				
 				if(exphm.containsKey(op2)){
@@ -58,6 +63,7 @@ public class DeadCodeElimination extends Optimizer {
 			}
 
 			exphm.put(parts[0], line);
+			codeOrder.add(parts[0]);
 			
 			if(parts[0].equals("function") || 
 					parts[0].equals("return") ||
@@ -69,9 +75,9 @@ public class DeadCodeElimination extends Optimizer {
 				counthm.put(parts[0], 0);
 		}
 		
-		for (Map.Entry entry : exphm.entrySet()) {
-			if(counthm.get(entry.getKey()).intValue() != 0){
-				out = entry.getValue() + "\n" + out;
+		for (String l : codeOrder) {
+			if(counthm.get(l).intValue() != 0){
+				out += exphm.get(l) + "\n";
 			}
 		}
 		

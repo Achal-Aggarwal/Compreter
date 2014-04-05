@@ -35,4 +35,8 @@ public abstract class Tree {
 	}
 	
 	public int tLineCount(){return 0;}
+	
+	public static void generateNewNames(boolean b){
+		Identifier.generateNames = b;
+	}
 }

@@ -28,7 +28,17 @@ public class Compreter {
 			
 			Optimize o = new Optimize();
 			
-			System.out.println("\n\nOTIMIZED\n" + o.optimizeAt(threeCode, 2));
+			String temp = "", t="";
+			for(int i=1;i<=10;i++){
+				temp = o.optimizeAt(threeCode, i);
+				System.out.println("\n\nOTIMIZED at level "+ (i) + "\n" + temp);
+				if(t.equals(temp)){
+					break;
+				}
+				
+				t =temp;
+			}
+				
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

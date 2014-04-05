@@ -43,9 +43,9 @@ public class ParameterList extends Tree {
 		String str = "";
 		
 		if(identifiers != null)
-			str += identifiers.getSimpleCode() + ", ";
+			str += ", " + identifiers.getSimpleCode();
 		
-		str += identifier.getNewName();
+		str = identifier.getNewName() + str;
 		
 		return str;
 	}

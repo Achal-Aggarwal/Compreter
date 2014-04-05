@@ -3,6 +3,7 @@ package compreter.parsertree;
 public class Identifier {
 	static int nextInt = 0;
 	static String nextName;
+	static public boolean generateNames = true;
 	int presentAt;
 	String oldName, newName;
 	static String firstAvail = "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ_";
@@ -11,13 +12,13 @@ public class Identifier {
 	public Identifier(String name){
 		this.oldName = name;
 		this.presentAt = -1;
-		this.newName = Identifier.getNextName();
+		this.newName = generateNames ? Identifier.getNextName() : name;
 	}
 	
 	public Identifier(String name, int lineNumber){
 		this.oldName = name;
 		this.presentAt = lineNumber;
-		this.newName = Identifier.getNextName();
+		this.newName = generateNames ? Identifier.getNextName() : name;
 	}
 	
 	public static String getNextName(){

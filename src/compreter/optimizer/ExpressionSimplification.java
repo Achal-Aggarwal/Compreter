@@ -4,8 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ExpressionSimplification extends Optimizer{
-	static Pattern idnumexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*)[\\s]*([^\\w\\d\\s]+)[\\s]*([\\d]+)[\\s]*",Pattern.DOTALL);
-	static Pattern numidexp = Pattern.compile("[\\s]*([\\d]+)[\\s]*([^\\w\\d\\s]+)[\\s]*([^0-9 ][\\w]*)[\\s]*",Pattern.DOTALL);
+	static Pattern idnumexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*)[\\s]*([^\\w\\d\\s.]+)[\\s]*([\\d]+)[\\s]*",Pattern.DOTALL);
+	static Pattern numidexp = Pattern.compile("[\\s]*([\\d]+)[\\s]*([^\\w\\d\\s.]+)[\\s]*([^0-9 ][\\w]*)[\\s]*",Pattern.DOTALL);
 	public String optimize(String in){
 		String out = "";
 		

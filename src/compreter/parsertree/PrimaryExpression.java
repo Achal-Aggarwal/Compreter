@@ -18,7 +18,9 @@ public class PrimaryExpression extends Tree {
 		}
 	}
 	
-	public String getSimpleCode(){return "ERROR";}
+	public String getSimpleCode(){
+		return this.getCode();
+	}
 	
 	public String toString(){
 		if(identifer != null)return this.identifer.getNewName(false);

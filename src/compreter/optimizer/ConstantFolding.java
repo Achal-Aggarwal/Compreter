@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConstantFolding extends Optimizer {
-	static Pattern numExp = Pattern.compile("[\\s]*([\\d]+)[\\s]*([^\\w\\d\\s]+)[\\s]*([\\d]+)[\\s]*",Pattern.DOTALL);
+	static Pattern numExp = Pattern.compile("[\\s]*([\\d]+)[\\s]*([^\\w\\d\\s.]+)[\\s]*([\\d]+)[\\s]*",Pattern.DOTALL);
 	public String optimize(String in){
 		String out = "";
 		
@@ -31,7 +31,7 @@ public class ConstantFolding extends Optimizer {
 						result = a * b;
 						break;
 					case "/":
-						result = a / b;
+						result = a * 1.0 / b;
 						break;
 					case "&&":
 						result = (a != 0 && b != 0) ? 1 : 0;

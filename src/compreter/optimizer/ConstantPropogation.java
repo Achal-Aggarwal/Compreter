@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class ConstantPropogation extends Optimizer {
 
 	static Pattern exp = Pattern.compile("[\\s]*([\\d]+)[\\s]*",Pattern.DOTALL);
-	static Pattern idopidexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*([^\\w\\d\\s]+)[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*",Pattern.DOTALL);
+	static Pattern idopidexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*([^\\w\\d\\s.]+)[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*",Pattern.DOTALL);
 	static Pattern idexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*)[\\s]*",Pattern.DOTALL);
 	static Pattern calididexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*)[\\s]*\\([\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*,[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*\\)[\\s]*",Pattern.DOTALL);
 	public String optimize(String in){
