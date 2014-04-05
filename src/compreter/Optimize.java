@@ -15,7 +15,11 @@ public class Optimize {
 			 ,new ExpressionSimplification()
 			,new ConstantPropogation()
 			, new CopyPropogation()
-			, new DeadCodeElimination()
+			//, new DeadCodeElimination()
+	};
+	
+	Optimizer optimizersOneTimer[]= {
+			new DeadCodeElimination()
 	};
 
 	private String getNextCodeBlock(){
@@ -25,22 +29,22 @@ public class Optimize {
 		String s = buffer[nextLine] + "\n";
 		String parts[] = buffer[nextLine++].split("[\\s]*:=[\\s]*");
 		
-		if(parts[0].equals("return") || 
+		if(parts[0].equals("return")/* || 
 				parts[0].equals("goto") ||
-				parts[0].equals("call")){
+				parts[0].equals("call")*/){
 			return s;
 		}
 		
 		
 		while(nextLine < buffer.length){
 			parts = buffer[nextLine].split("[\\s]*:=[\\s]*");
-			if(parts[0].equals("function") || 
-					parts[0].equals("label"))
+			if(parts[0].equals("function")/* || 
+					parts[0].equals("label")*/)
 				break;
 			
-			if(parts[0].equals("return") || 
+			if(parts[0].equals("return")/* || 
 					parts[0].equals("goto") ||
-					parts[0].equals("call")){
+					parts[0].equals("call")*/){
 				s += buffer[nextLine++] + "\n";
 				break;
 			}
@@ -66,10 +70,28 @@ public class Optimize {
 		return output;
 	}
 	
+	private String optimizeOneTime(String in)
+	{
+		this.buffer = in.split("\n");
+		this.nextLine = 0;
+		String threeCode, output = "";
+		
+		while((threeCode = this.getNextCodeBlock()) != null){
+			for(Optimizer optimizer : optimizersOneTimer){
+				threeCode = optimizer.optimize(threeCode);
+			}
+			output += threeCode;
+		}
+		
+		return output;
+	}
+	
 	public String optimizeAt(String in, int level){
 		 
 		for(int i=0;i<level;i++)
 			in = this.optimize(in);
+		
+		in = this.optimizeOneTime(in);
 		
 		return in;
 	}

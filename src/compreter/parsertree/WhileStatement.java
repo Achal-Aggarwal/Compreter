@@ -43,9 +43,9 @@ public class WhileStatement extends Tree {
 	}
 	
 	public String getLabelCode(){
-		return condition.getLabelCode() + 
+		return "label := " + this.labelFirst + "\n" + 
 				this.printLineNumber(true) +
-				"label := " + this.labelFirst + "\n" + 
+				condition.getLabelCode() + 
 				this.printLineNumber(true) + 
 				"goto := " + this.labelLast + 
 				" if " + condition.place + " == false \n" +
@@ -57,9 +57,9 @@ public class WhileStatement extends Tree {
 	}
 	
 	public String getSimpleCode(){
-		return condition.getSimpleCode() + 
+		return "label := " + this.labelFirst + "\n" + 
 				this.printLineNumber(true) +
-				"label := " + this.labelFirst + "\n" + 
+				condition.getSimpleCode() + 
 				this.printLineNumber(true) + 
 				"goto := " + this.labelLast + 
 				" if " + condition.place + " == false \n" +

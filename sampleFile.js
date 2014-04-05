@@ -5,4 +5,8 @@ function main(a,b,c)
 	a = a + b * 2;
 	return a/4;
 }
-main(2*4 - 2,1,5);
+var i=0,j;
+while(i<j){
+	j = j+i;
+}
+main(j,j,j)

@@ -53,7 +53,7 @@ public class ConstantPropogation extends Optimizer {
 						out += parts[0] + " := " + idOne + "\n";
 					} else {
 						matcher = calididexp.matcher(parts[1]);
-						if(matcher.matches()){
+						if(matcher.matches() && parts[0].equals("call")){
 							Object functName = matcher.group(1);
 							String params[] = matcher.group(2).split(", ");
 							out += parts[0] + " := " + functName + " ( ";

@@ -15,7 +15,11 @@ public class CopyPropogation extends Optimizer {
 			String parts[] = line.split("[\\s]*:=[\\s]*");
 			String id = parts[0];
 			Matcher matcher = idexp.matcher(parts[1]);
-			if(matcher.matches()){
+			if(matcher.matches() && 
+					!(parts[0].equals("function") ||
+						parts[0].equals("label") ||
+						parts[0].equals("goto") ||
+						parts[0].equals("call"))){
 				if(hm.containsKey(matcher.group(1))){
 					out += parts[0] + " := " + hm.get(matcher.group(1)) + "\n";
 					hm.put(parts[0], hm.get(matcher.group(1)));
