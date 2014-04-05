@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class DeadCodeElimination extends Optimizer {
 	static Pattern idnumexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*([^\\w\\d\\s.]+)[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*",Pattern.DOTALL);
 	static Pattern idornumexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*",Pattern.DOTALL);
-	static Pattern calididexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*)[\\s]*\\([\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*,[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*\\)[\\s]*",Pattern.DOTALL);
+	static Pattern calididexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*)[\\s]*\\([\\s]*([^)]*)[\\s]*\\)[\\s]*",Pattern.DOTALL);
 	
 	public String optimize(String in){
 		String out = "";
@@ -48,18 +48,16 @@ public class DeadCodeElimination extends Optimizer {
 				} 
 			}
 			
+			/////////Check this code
 			matcher = calididexp.matcher(parts[1]);
 			if(matcher.matches()){
-				op1 = matcher.group(2);
-				op2 = matcher.group(3);
-
-				if(exphm.containsKey(op1)){
-					counthm.put(op1, counthm.get(op1)+1);
-				} 
+				String params[] = matcher.group(2).split(", ");
 				
-				if(exphm.containsKey(op2)){
-					counthm.put(op2, counthm.get(op2)+1);
-				} 
+				for(String param:params){
+					if(exphm.containsKey(param)){
+						counthm.put(param, counthm.get(param)+1);
+					} 
+				}
 			}
 
 			exphm.put(parts[0], line);

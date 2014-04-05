@@ -22,8 +22,16 @@ public class Optimize {
 		if(nextLine >= buffer.length)
 			return null;
 		
-		String s = buffer[nextLine++] + "\n";
-		String parts[];
+		String s = buffer[nextLine] + "\n";
+		String parts[] = buffer[nextLine++].split("[\\s]*:=[\\s]*");
+		
+		if(parts[0].equals("return") || 
+				parts[0].equals("goto") ||
+				parts[0].equals("call")){
+			return s;
+		}
+		
+		
 		while(nextLine < buffer.length){
 			parts = buffer[nextLine].split("[\\s]*:=[\\s]*");
 			if(parts[0].equals("function") || 
