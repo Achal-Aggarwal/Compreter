@@ -7,13 +7,13 @@ public class ParameterList extends Tree {
 	Tree identifiers = null;
 	
 	public ParameterList(Symbol identifier, Tree identifiers){
-		this.identifier = new Identifier(identifier.getValue());
+		this.identifier = new Identifier(identifier.getValue(),-1,current_block + " : param");
 		it.addIdentifier(this.identifier);
 		this.identifiers = identifiers;
 	}
 	
 	public ParameterList(Symbol identifier) {
-		this.identifier = new Identifier(identifier.getValue());
+		this.identifier = new Identifier(identifier.getValue(),-1,current_block + " : param");
 		it.addIdentifier(this.identifier);
 	}
 

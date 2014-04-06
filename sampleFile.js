@@ -1,12 +1,10 @@
-function main(a,b,c)
+function solve(parameterPassed)
 {
-	b = 1;
-	a = 1;
-	a = a + b * 2;
-	return a/4;
+var firstVariable, secondVariable = 60,thirdVariable, fourthVariable;
+firstVariable = parameterPassed + 55 - secondVariable;
+thirdVariable = secondVariable * parameterPassed;
+fourthVariable = parameterPassed / thirdVariable;
+return fourthVariable;
 }
-var i=0,j;
-while(i<j){
-	j = j+i;
-}
-main(j,j,j)
+
+solve(45);

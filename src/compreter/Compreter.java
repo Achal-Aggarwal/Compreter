@@ -3,6 +3,7 @@ package compreter;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
 
 import compreter.optimizer.ConstantFolding;
 import compreter.optimizer.ConstantPropogation;
@@ -21,8 +22,9 @@ public class Compreter {
 		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(args[0]));
+			
 			Parser parser = new Parser(br);
-			String threeCode = (String) parser.parse();
+			String threeCode = (String) parser.parse(Parser.CodeType.SIMPLE_CODE, false, false);
 			
 			System.out.println("ORIGINAL\n" + threeCode);
 			
@@ -38,7 +40,14 @@ public class Compreter {
 				
 				t =temp;
 			}
-				
+			Converter c = new Converter();
+			String js = c.convertToJS(temp);
+			System.out.println("\n\nJJJJS \n" + js);
+			
+			Parser miniparser = new Parser(new BufferedReader(new StringReader(js)));
+			String minifiedJS = (String) miniparser.parse(Parser.CodeType.JS_MINIFIED, false, true);
+			
+			System.out.println("\n\nMinifiedJs \n" + minifiedJS);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

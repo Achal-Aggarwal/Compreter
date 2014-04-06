@@ -15,7 +15,7 @@ public class Optimize {
 			 ,new ExpressionSimplification()
 			,new ConstantPropogation()
 			, new CopyPropogation()
-			//, new DeadCodeElimination()
+			, new DeadCodeElimination()
 	};
 	
 	Optimizer optimizersOneTimer[]= {
@@ -91,7 +91,7 @@ public class Optimize {
 		for(int i=0;i<level;i++)
 			in = this.optimize(in);
 		
-		in = this.optimizeOneTime(in);
+		//in = this.optimizeOneTime(in);
 		
 		return in;
 	}

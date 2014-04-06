@@ -10,7 +10,7 @@ public class FunctionStatement extends Tree{
 	String returnAddress = null;
 	
 	public FunctionStatement(Symbol name, Tree paramList, Tree compoundStatement){
-		this.name = new Identifier(name.getValue());
+		this.name = new Identifier(name.getValue(),-1,current_block + " : func");
 		it.addIdentifier(this.name);
 		this.paramlist = paramList;
 		this.compoundStatement = compoundStatement;
@@ -32,7 +32,22 @@ public class FunctionStatement extends Tree{
 		String str = "function " + name.getNewName(false) + "(";
 		if(paramlist != null)
 			str += paramlist.toString();
-		str += "){" + compoundStatement.toString() + "}";
+		
+		str += "){";
+		
+		Object[] ids = it.getAllIdentifier();
+		
+		if(ids.length > 0){
+			str += "var ";
+			for(Object id:ids){
+				str += ((String) id) + ",";
+			}
+			
+			str = str.substring(0,str.length()-1) + ";";
+		}
+			
+		
+		str +=  compoundStatement.toString() + "}";
 		
 		return str;
 	}

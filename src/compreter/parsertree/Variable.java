@@ -7,12 +7,12 @@ public class Variable extends Tree {
 	Tree expression = null;
 	
 	public Variable(Symbol i){
-		this.identifier = new Identifier(i.getValue());
+		this.identifier = new Identifier(i.getValue(),-1,current_block);
 		it.addIdentifier(identifier);
 	}
 	
 	public Variable(Symbol i, Tree expression){
-		this.identifier = new Identifier(i.getValue());
+		this.identifier = new Identifier(i.getValue(),-1,current_block);
 		it.addIdentifier(identifier);
 		this.expression = expression;
 	}

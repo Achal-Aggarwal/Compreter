@@ -4,7 +4,7 @@ public abstract class Tree {
 	static int lineNumber = 1;
 	
 	static int backPatchLineNumber = -1;
-	
+	static String current_block = "__main__";
 	static int lastTemp = 0;
 	
 	static int lastLabel = 0;
@@ -13,9 +13,13 @@ public abstract class Tree {
 
 	String place = null;
 	
-	static IdentifierTable it = new IdentifierTable();
+	static IdentifierTable it;
 	
 	int currentLineNumber = -1;
+	
+	public static void initializeIdentifierTable(){
+		it = new IdentifierTable();
+	}
 	
 	public String getCode(){return "";}
 	public String getLabelCode(){return this.getCode();}
