@@ -22,17 +22,17 @@ public class Converter {
 					String params[] = matcher.group(2).split("[\\s]*,[\\s]*");
 					String par = "";
 					for(String param:params){
-						par += param.substring(1,param.length()-1) + ", ";
+						par += param + ", ";
 					}
 					
 					par = par.substring(0,par.length()-2);
 					
 					if(parts[0].equals("function")){
-						out += "function " + functName.substring(1,functName.length()-1) + " ( ";
+						out += "function " + functName + " ( ";
 						out += par + " ){\n";
 						indentLevel += 1;
 					} else{
-						out += nString("\t", indentLevel) + functName.substring(1,functName.length()-1) + "( ";
+						out += nString("\t", indentLevel) + functName + "( ";
 						out += par + " );\n";
 					}
 					
@@ -51,22 +51,13 @@ public class Converter {
 					op1 = matcher.group(1);
 					op2 = matcher.group(3);
 					op = matcher.group(2);
-					
-					if(op1.contains("_")){
-						op1 = op1.substring(1,op1.length()-1);
-					}
-					
-					if(op2.contains("_")){
-						op2 = op2.substring(1,op2.length()-1);
-					}
+
 					
 					if(parts[0].equals("return")){
 						out += nString("\t", indentLevel) +  "return " + op1 + " " +  op + " " + op2 + ";\n"; 
 					} else {
 						String result = parts[0];
-						if(parts[0].contains("_")){
-							result = parts[0].substring(1,parts[0].length()-1);
-						}
+						
 						out += nString("\t", indentLevel) +  result + " = " + op1 + " " +  op + " " + op2 + ";\n"; 
 					}
 					

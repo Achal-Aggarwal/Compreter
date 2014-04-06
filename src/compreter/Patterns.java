@@ -18,7 +18,7 @@ public interface Patterns {
 	,COMMENT =Pattern.compile(patternStart + "(\\/\\*[\\w\\'\\s\\r\\n\\*]*\\*\\/).*|" //multiline
 			+ patternStart + "(//[^\\n]*).*",Pattern.DOTALL)
 	
-	,IDENTIFIER_NAME = Pattern.compile(patternStart + "([A-Za-z]+[A-Za-z0-9]*)"+ "(" + patternEnd + "|" + PUNCTUATORS.pattern() + ")", Pattern.DOTALL)
+	,IDENTIFIER_NAME = Pattern.compile(patternStart + "([A-Za-z_]+[A-Za-z0-9_]*)"+ "(" + patternEnd + "|" + PUNCTUATORS.pattern() + ")", Pattern.DOTALL)
 	
 	,NUMERIC_LITERAL= Pattern.compile(patternStart + "([0-9]+)" + "(" + patternEnd + "|" + PUNCTUATORS.pattern() + ")", Pattern.DOTALL)
 	
