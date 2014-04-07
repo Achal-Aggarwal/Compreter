@@ -3,21 +3,38 @@ package compreter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+
+import compreter.optimizer.ConstantFolding;
 import compreter.parsertree.*;
 
 public class Parser {
 	Lexer lex;
 	Symbol token;
-	
+	Tree function = null;
+	public enum CodeType  {JS_MINIFIED, THREE_ADDRESS_LABELED, THREE_ADDRESS, SIMPLE_CODE};
 	public Parser(BufferedReader input) throws IOException{
 		lex = new Lexer(input);
 		token = null;
 	}
-	public int parse(){
+	public String parse(CodeType codetype, boolean printLineNumbers, boolean genNewName){
+		Tree.printLineNumber = printLineNumbers;
+		Tree.generateNewNames(genNewName);
+		Tree.initializeIdentifierTable();
+
 		Tree tree = programPro();
-		//System.out.println(tree);
-		System.out.println(tree.getCode());
-		return 0;
+		if(codetype == CodeType.JS_MINIFIED)
+			return tree.toString();
+		else if(codetype == CodeType.THREE_ADDRESS)
+			return tree.getCode();
+		else if(codetype == CodeType.THREE_ADDRESS_LABELED)
+			return tree.getLabelCode();
+		else if(codetype == CodeType.SIMPLE_CODE)
+			return tree.getSimpleCode();
+		//System.out.println(tree.getCode());
+		//System.out.println(tree.getLabelCode());
+		//System.out.println(tree.getSimpleCode());
+		//System.out.println(ConstantFolding.optimize(tree.getSimpleCode()));
+		return "";
 	}
 	
 	public Symbol accept(Symbol.Id code){
@@ -334,7 +351,7 @@ public class Parser {
 			if((operator = accept(Symbol.Id.PUNCTUATORS,"\\|\\|")) != null){
 				if((secondConditionalExpression = orExpressionPro()) != null){
 					return new BinaryExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression, BinaryExpression.Type.BOOLEAN);
+							operator, secondConditionalExpression);
 				}
 				
 				return null;
@@ -354,7 +371,7 @@ public class Parser {
 			if((operator = accept(Symbol.Id.PUNCTUATORS,"&&")) != null){
 				if((secondConditionalExpression = andExpressionPro()) != null){
 					return new BinaryExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression, BinaryExpression.Type.BOOLEAN);
+							operator, secondConditionalExpression);
 				}
 				
 				return null;
@@ -374,7 +391,7 @@ public class Parser {
 			if((operator = accept(Symbol.Id.PUNCTUATORS,"===?")) != null){
 				if((secondConditionalExpression = equalityExpressionPro()) != null){
 					return new BinaryExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression, BinaryExpression.Type.RELATIONAL);
+							operator, secondConditionalExpression);
 				}
 				
 				return null;
@@ -389,58 +406,90 @@ public class Parser {
 	public Tree relationalExpressionPro(){
 		Tree firstConditionalExpression = null, secondConditionalExpression = null;
 		Symbol operator = null;
-		
+
 		if((firstConditionalExpression = additiveExpressionPro()) != null){
 			if((operator = accept(Symbol.Id.PUNCTUATORS,"(>=?|<=?)")) != null){
 				if((secondConditionalExpression = relationalExpressionPro()) != null){
 					return new BinaryExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression, BinaryExpression.Type.RELATIONAL);
+							operator, secondConditionalExpression);
 				}
-				
+
 				return null;
 			}
-			
+
 			return firstConditionalExpression;
 		}
-		
+
 		return null;
 	}
 	
 	public Tree additiveExpressionPro(){
 		Tree firstConditionalExpression = null, secondConditionalExpression = null;
-		Symbol operator = null;
-		
+
 		if((firstConditionalExpression = multiplicativeExpressionPro()) != null){
-			if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\+|-)")) != null){
-				if((secondConditionalExpression = additiveExpressionPro()) != null){
-					return new BinaryExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression, BinaryExpression.Type.AIRTHMETIC);
-				}
-				
-				return null;
+			if((secondConditionalExpression = additiveExpressionDashPro(firstConditionalExpression)) != null){
+				return secondConditionalExpression;
 			}
-			
+
 			return firstConditionalExpression;
 		}
-		
+
+		return null;
+	}
+
+	public Tree additiveExpressionDashPro(Tree firstConditionalExpression){
+		Tree secondConditionalExpression = null;
+		Symbol operator = null;
+
+		if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\+|-)")) != null){
+			if((secondConditionalExpression = multiplicativeExpressionPro()) != null){
+				firstConditionalExpression =  new BinaryExpression(firstConditionalExpression, 
+						operator, secondConditionalExpression);
+
+				if((secondConditionalExpression = additiveExpressionDashPro(firstConditionalExpression)) != null){
+					return secondConditionalExpression;
+				}
+
+				return firstConditionalExpression;
+			}
+
+			return null;
+		}
+
 		return null;
 	}
 	
 	public Tree multiplicativeExpressionPro(){
 		Tree firstConditionalExpression = null, secondConditionalExpression = null;
-		Symbol operator = null;
-		
+
 		if((firstConditionalExpression = unaryExpressionPro()) != null){
-			if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\*|/)")) != null){
-				if((secondConditionalExpression = multiplicativeExpressionPro()) != null){
-					return new BinaryExpression(firstConditionalExpression, 
-							operator, secondConditionalExpression, BinaryExpression.Type.AIRTHMETIC);
+			if((secondConditionalExpression = multiplicativeExpressionDashPro(firstConditionalExpression)) != null){
+				return secondConditionalExpression;
+			}
+
+			return firstConditionalExpression;
+		}
+
+		return null;
+	}
+
+	public Tree multiplicativeExpressionDashPro(Tree firstConditionalExpression){
+		Tree secondConditionalExpression = null;
+		Symbol operator = null;
+
+		if((operator = accept(Symbol.Id.PUNCTUATORS,"(\\*|/)")) != null){
+			if((secondConditionalExpression = unaryExpressionPro()) != null){
+				firstConditionalExpression =  new BinaryExpression(firstConditionalExpression, 
+						operator, secondConditionalExpression);
+
+				if((secondConditionalExpression = multiplicativeExpressionDashPro(firstConditionalExpression)) != null){
+					return secondConditionalExpression;
 				}
 				
-				return null;
+				return firstConditionalExpression;
 			}
 			
-			return firstConditionalExpression;
+			return null;
 		}
 		
 		return null;

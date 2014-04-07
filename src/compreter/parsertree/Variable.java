@@ -7,12 +7,12 @@ public class Variable extends Tree {
 	Tree expression = null;
 	
 	public Variable(Symbol i){
-		this.identifier = new Identifier(i.getValue());
+		this.identifier = new Identifier(i.getValue(),-1,current_block);
 		it.addIdentifier(identifier);
 	}
 	
 	public Variable(Symbol i, Tree expression){
-		this.identifier = new Identifier(i.getValue());
+		this.identifier = new Identifier(i.getValue(),-1,current_block);
 		it.addIdentifier(identifier);
 		this.expression = expression;
 	}
@@ -29,6 +29,17 @@ public class Variable extends Tree {
 		String str = "";
 		if(expression != null){
 			str += expression.getCode() +
+				this.printLineNumber(true) + 
+				identifier.getNewName() + " := " + expression.place + "\n";
+		}
+		
+		return str;
+	}
+	
+	public String getSimpleCode(){
+		String str = "";
+		if(expression != null){
+			str += expression.getSimpleCode() +
 				this.printLineNumber(true) + 
 				identifier.getNewName() + " := " + expression.place + "\n";
 		}

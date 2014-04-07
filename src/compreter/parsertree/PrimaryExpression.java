@@ -9,13 +9,22 @@ public class PrimaryExpression extends Tree {
 	
 	public PrimaryExpression(Symbol s){
 		if(Symbol.Id.IDENTIFIER_NAME == s.getCode()){
-			this.identifer = it.getIdentifier(s.getValue());
+			if(it.isExist(s.getValue())){
+				this.identifer = it.getIdentifier(s.getValue());
+			} else {
+				this.identifer = new Identifier(s.getValue(),-1,current_block);
+				it.addIdentifier(this.identifer);
+			}
 			this.place = this.identifer.getNewName();
 		}
 		else{
 			this.literal = s;
 			this.place = s.getValue();
 		}
+	}
+	
+	public String getSimpleCode(){
+		return this.getCode();
 	}
 	
 	public String toString(){

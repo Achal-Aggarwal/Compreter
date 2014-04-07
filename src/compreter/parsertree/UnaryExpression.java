@@ -38,6 +38,20 @@ public class UnaryExpression extends Tree {
 		return str + "\n";
 	}
 	
+	public String getSimpleCode(){
+		String str = this.printLineNumber(true) + 
+				this.operand.getSimpleCode() + this.place + " := ";
+		
+		if(!this.isPostFix){
+			str += this.operator.getValue() + this.place;
+		}
+		else{
+			str += this.place + this.operator.getValue();
+		}
+		
+		return str + "\n";
+	}
+	
 	public int tLineCount(){
 		return this.operand.tLineCount() + 1;
 	}

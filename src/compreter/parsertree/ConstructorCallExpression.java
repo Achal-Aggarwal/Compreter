@@ -36,4 +36,20 @@ public class ConstructorCallExpression extends Tree {
 		
 		return str;
 	}
+	
+	public String getSimpleCode(){
+		String str = "";
+		
+		if(argumentListOpt!=null){
+			str += argumentListOpt.getSimpleCode();
+		}
+		
+		str += this.printLineNumber(true) + "call := " + identifier.getNewName() + " ( ";
+		if(argumentListOpt!=null)
+			str += ((ArgumentListExpression) argumentListOpt).getArgumentList();
+		
+		str += " )" + "\n";
+		this.place = "called " + identifier.getNewName();
+		return str;
+	}
 }

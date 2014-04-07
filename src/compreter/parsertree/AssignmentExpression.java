@@ -19,6 +19,10 @@ public class AssignmentExpression extends Tree {
 		return expression.getCode() + this.printLineNumber(true) + identifer.place + " := " + expression.place + "\n";
 	}
 	
+	public String getSimpleCode(){
+		return expression.getSimpleCode() + this.printLineNumber(true) + identifer.place + " := " + expression.place + "\n";
+	}
+	
 	public int tLineCount(){
 		return this.expression.tLineCount() + 1;
 	}

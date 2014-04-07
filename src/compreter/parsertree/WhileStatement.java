@@ -5,10 +5,14 @@ import java.util.ListIterator;
 
 public class WhileStatement extends Tree {
 	Tree condition = null, body = null;
+	String labelFirst = null, labelLast= null;
 	public int startLine=-1,endLine=-1;
 	public WhileStatement(Tree condition, Tree body){
 		this.condition = condition;
 		this.body = body;
+		
+		this.labelFirst = Tree.getNextLabel();
+		this.labelLast = Tree.getNextLabel();
 		
 		ArrayList<Tree> loopControlStatements = findLoopControlStatements();
 		
@@ -36,6 +40,34 @@ public class WhileStatement extends Tree {
 		
 
 		return str;
+	}
+	
+	public String getLabelCode(){
+		return "label := " + this.labelFirst + "\n" + 
+				this.printLineNumber(true) +
+				condition.getLabelCode() + 
+				this.printLineNumber(true) + 
+				"goto := " + this.labelLast + 
+				" if " + condition.place + " == false \n" +
+				body.getLabelCode() +
+				this.printLineNumber(true) + 
+				"goto := " + this.labelFirst +"\n" + 
+				this.printLineNumber(true) + 
+				"label := " + this.labelLast + "\n";
+	}
+	
+	public String getSimpleCode(){
+		return "label := " + this.labelFirst + "\n" + 
+				this.printLineNumber(true) +
+				condition.getSimpleCode() + 
+				this.printLineNumber(true) + 
+				"goto := " + this.labelLast + 
+				" if " + condition.place + " == false \n" +
+				body.getSimpleCode() +
+				this.printLineNumber(true) + 
+				"goto := " + this.labelFirst +"\n" + 
+				this.printLineNumber(true) + 
+				"label := " + this.labelLast + "\n";
 	}
 	
 	public int tLineCount(){

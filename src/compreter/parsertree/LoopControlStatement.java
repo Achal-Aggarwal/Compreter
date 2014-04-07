@@ -19,11 +19,15 @@ public class LoopControlStatement extends Tree {
 	
 	public String getCode(){
 		if(type.compareTo("break")==0){
-			return this.printLineNumber(true) +"goto := " + loop.endLine + "\n";
+			return this.printLineNumber(true) +"goto := " + loop.labelLast + "\n";
 		}
 		else{
-			return this.printLineNumber(true) +"goto := " + loop.startLine + "\n";
+			return this.printLineNumber(true) +"goto := " + loop.labelFirst + "\n";
 		}
+	}
+	
+	public String getSimpleCode(){
+		return this.getCode();
 	}
 	
 	public int tLineCount(){

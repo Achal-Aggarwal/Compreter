@@ -22,6 +22,14 @@ public class MemberExpression extends Tree {
 				" [ " + expression.place + " ]\n";
 	}
 	
+	public String getSimpleCode(){
+		return expression.getSimpleCode() + 
+				this.printLineNumber(true) + 
+				this.place + " := " +
+				primaryExpression.place + 
+				" [ " + expression.place + " ]\n";
+	}
+	
 	public int tLineCount(){
 		return expression.tLineCount() + 1;
 	}
