@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConstantFolding extends Optimizer {
-	static Pattern numExp = Pattern.compile("[\\s]*([\\d]+)[\\s]*([^\\w\\d\\s.]+)[\\s]*([\\d]+)[\\s]*",Pattern.DOTALL);
+	static Pattern numExp = Pattern.compile("[\\s]*([\\d]+|[+-]?\\d*\\.\\d+(?:[eE][+-]?\\d+)?)[\\s]*([^\\w\\d\\s.]+)[\\s]*([\\d]+|[+-]?\\d*\\.\\d+(?:[eE][+-]?\\d+)?)[\\s]*",Pattern.DOTALL);
 	public String optimize(String in){
 		String out = "";
 		
@@ -16,40 +16,55 @@ public class ConstantFolding extends Optimizer {
 			Matcher matcher = numExp.matcher(parts[1]);
 			if(matcher.matches()){
 				
-				int a = Integer.parseInt(matcher.group(1));
-				int b = Integer.parseInt(matcher.group(3));
+				float aT = Float.parseFloat(matcher.group(1));
+				float bT = Float.parseFloat(matcher.group(3));
+				Integer ai = null, bi = null;
+				Float af = null, bf = null;
+				
+				if(aT == Math.round(aT)){
+					ai = (int) aT; 
+				} else {
+					af = (float) aT;
+				}
+				
+				if(bT == Math.round(bT)){
+					bi = (int) bT; 
+				} else {
+					bf = (float) bT;
+				}
+
 				Object result = 0;
 				
 				switch(matcher.group(2)){
 					case "+":
-						result = a + b;
+						result = ai != null ? (bi != null ? ai + bi : ai + bf) : (bi != null ? af + bi : af + bf);
 						break;
 					case "-":
-						result = a - b;
+						result = ai != null ? (bi != null ? ai - bi : ai - bf) : (bi != null ? af - bi : af - bf);
 						break;
 					case "*":
-						result = a * b;
+						result = ai != null ? (bi != null ? ai * bi : ai * bf) : (bi != null ? af * bi : af * bf);
 						break;
 					case "/":
-						result = a * 1.0 / b;
+						result = ai != null ? (bi != null ? ai * 1.0 / bi : ai * 1.0 / bf) : (bi != null ? af / bi : af / bf);
 						break;
 					case "&&":
-						result = (a != 0 && b != 0) ? 1 : 0;
+						result = ((ai != null && ai!= 0) || (af != null && af!= 0)) && ((bi != null && bi!= 0) || (bf != null && bf!= 0)) ? 1 : 0;
 						break;
 					case "||":
-						result = (a != 0 || b != 0) ? 1 : 0;
+						result = ((ai != null && ai!= 0) || (af != null && af!= 0)) || ((bi != null && bi!= 0) || (bf != null && bf!= 0)) ? 1 : 0;
 						break;
 					case "<=":
-						result = (a <= b) ? 1 : 0;
+						result = ai != null ? (bi != null ? ai <= bi : ai <= bf) : (bi != null ? af <= bi : af <= bf);
 						break;
 					case "==":
-						result = (a == b) ? 1 : 0;
+						result = ai != null ? (bi != null ? ai == bi : 0) : (bi != null ? 0 : af == bf);
 						break;
 					case ">=":
-						result = (a >= b) ? 1 : 0;
+						result = ai != null ? (bi != null ? ai >= bi : ai >= bf) : (bi != null ? af >= bi : af >= bf);
 						break;
 					default:
-						result = a + " " + matcher.group(2) + " " + b;
+						result = aT  + " " + matcher.group(2) + " " + bT;
 				}
 				out += parts[0] + " := " + result + "\n";
 			} else {

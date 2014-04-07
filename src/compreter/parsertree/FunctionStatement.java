@@ -92,11 +92,12 @@ public class FunctionStatement extends Tree{
 	public String getSimpleCode(){
 		String str= "";
 		
-		str += this.printLineNumber(true) + "function := " + name.getNewName();
+		str += this.printLineNumber(true) + "function := " + name.getNewName() + " (";
 
-		str += " (" + paramlist.getSimpleCode() + ")\n";
+		if(paramlist != null)
+			str += paramlist.getSimpleCode();
 		
-		str += compoundStatement.getSimpleCode();
+		str += ")\n" + compoundStatement.getSimpleCode();
 
 		str += this.printLineNumber(true) + "return := function "+ name.getNewName() +"\n";
 		

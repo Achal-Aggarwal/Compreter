@@ -1,10 +1,11 @@
 function solve(parameterPassed)
 {
-var firstVariable, secondVariable = 60,thirdVariable, fourthVariable;
-firstVariable = parameterPassed + 55 - secondVariable;
-thirdVariable = secondVariable * parameterPassed;
-fourthVariable = parameterPassed / thirdVariable;
+var firstVariable, secondVariable,thirdVariable, fourthVariable;
+firstVariable = false && parameterPassed;
+secondVariable = parameterPassed || true && firstVariable;
+thirdVariable = false || secondVariable && firstVariable;
+fourthVariable = thirdVariable ;
 return fourthVariable;
 }
 
-solve(45);
+solve(true);

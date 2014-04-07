@@ -6,14 +6,14 @@ import java.util.regex.Pattern;
 
 public class ConstantPropogation extends Optimizer {
 
-	static Pattern exp = Pattern.compile("[\\s]*([\\d]+)[\\s]*",Pattern.DOTALL);
-	static Pattern idopidexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*([^\\w\\d\\s.]+)[\\s]*([^0-9 ][\\w]*|[\\d]+)[\\s]*",Pattern.DOTALL);
+	static Pattern exp = Pattern.compile("[\\s]*([\\d]+|[+-]?\\d*\\.\\d+(?:[eE][+-]?\\d+)?)[\\s]*",Pattern.DOTALL);
+	static Pattern idopidexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*|[\\d]+|[+-]?\\d*\\.\\d+(?:[eE][+-]?\\d+)?)[\\s]*([^\\w\\d\\s.]+)[\\s]*([^0-9 ][\\w]*|[\\d]+|[+-]?\\d*\\.\\d+(?:[eE][+-]?\\d+)?)[\\s]*",Pattern.DOTALL);
 	static Pattern idexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*)[\\s]*",Pattern.DOTALL);
 	static Pattern calididexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*)[\\s]*\\([\\s]*([^)]*)[\\s]*\\)[\\s]*",Pattern.DOTALL);
 	
 	public String optimize(String in){
 		String out = "";
-		HashMap<String, Integer> hm = new HashMap<String, Integer>();
+		HashMap<String, String> hm = new HashMap<String, String>();
 		String lines[] = in.split("\n");
 		
 		for(String line : lines){
@@ -21,7 +21,7 @@ public class ConstantPropogation extends Optimizer {
 			String id = parts[0];
 			Matcher matcher = exp.matcher(parts[1]);
 			if(matcher.matches() && parts[0] != "return" && parts[0] != "call"){
-				int constant = Integer.parseInt(matcher.group(1));
+				String constant = matcher.group(1);
 				hm.put(id, constant);
 				out += line + "\n";
 			} else {
