@@ -1,7 +1,7 @@
 package compreter.parsertree;
 
 public class Identifier {
-	static int nextInt = 0;
+	public static int nextInt = 0;
 	static String nextName;
 	static public boolean generateNames = true;
 	int presentAt;

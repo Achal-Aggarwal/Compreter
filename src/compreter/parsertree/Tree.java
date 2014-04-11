@@ -18,6 +18,7 @@ public abstract class Tree {
 	int currentLineNumber = -1;
 	
 	public static void initializeIdentifierTable(){
+		Identifier.nextInt = 0;
 		it = new IdentifierTable();
 	}
 	

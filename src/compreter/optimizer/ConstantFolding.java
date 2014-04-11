@@ -37,16 +37,65 @@ public class ConstantFolding extends Optimizer {
 				
 				switch(matcher.group(2)){
 					case "+":
-						result = ai != null ? (bi != null ? ai + bi : ai + bf) : (bi != null ? af + bi : af + bf);
+						if (ai != null){
+							if (bi != null){
+								result = ai + bi;
+							} else {
+								result = ai + bf;
+							}
+						} else {
+							if (bi != null){
+								result = af + bi;
+							} else {
+								result = af + bf;
+							}
+						}
+
 						break;
 					case "-":
-						result = ai != null ? (bi != null ? ai - bi : ai - bf) : (bi != null ? af - bi : af - bf);
+						if (ai != null){
+							if (bi != null){
+								result = ai - bi;
+							} else {
+								result = ai - bf;
+							}
+						} else {
+							if (bi != null){
+								result = af - bi;
+							} else {
+								result = af - bf;
+							}
+						}
 						break;
 					case "*":
-						result = ai != null ? (bi != null ? ai * bi : ai * bf) : (bi != null ? af * bi : af * bf);
+						if (ai != null){
+							if (bi != null){
+								result = ai * bi;
+							} else {
+								result = ai * bf;
+							}
+						} else {
+							if (bi != null){
+								result = af * bi;
+							} else {
+								result = af * bf;
+							}
+						}
 						break;
 					case "/":
-						result = ai != null ? (bi != null ? ai * 1.0 / bi : ai * 1.0 / bf) : (bi != null ? af / bi : af / bf);
+						if (ai != null){
+							if (bi != null){
+								result = ai / bi;
+							} else {
+								result = ai / bf;
+							}
+						} else {
+							if (bi != null){
+								result = af / bi;
+							} else {
+								result = af / bf;
+							}
+						}
 						break;
 					case "&&":
 						result = ((ai != null && ai!= 0) || (af != null && af!= 0)) && ((bi != null && bi!= 0) || (bf != null && bf!= 0)) ? 1 : 0;

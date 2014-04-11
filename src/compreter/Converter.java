@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 public class Converter {
 	static Pattern calididexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*)[\\s]*\\([\\s]*([^)]*)[\\s]*\\)[\\s]*",Pattern.DOTALL);
 	static Pattern idnumexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*|[\\d]+|[+-]?\\d*\\.\\d+(?:[eE][+-]?\\d+)?)[\\s]*([^\\w\\d\\s.]+)[\\s]*([^0-9 ][\\w]*|[\\d]+|[+-]?\\d*\\.\\d+(?:[eE][+-]?\\d+)?)[\\s]*",Pattern.DOTALL);
+	static Pattern idexp = Pattern.compile("[\\s]*([^0-9 ][\\w]*)[\\s]*",Pattern.DOTALL);
 	
 	public String convertToJS(String in){
 		String out = "";
@@ -67,6 +68,11 @@ public class Converter {
 						out += "}\n";
 					} else if(parts[0].equals("return")){
 						out += nString("\t", indentLevel) +  "return " + parts[1] + ";\n"; 
+					}
+
+					matcher = idexp.matcher(parts[1]);
+					if(matcher.matches()){
+						out += nString("\t", indentLevel) +  parts[0] + " = " + parts[1] + ";\n";
 					}
 				}
 			}

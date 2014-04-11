@@ -24,6 +24,7 @@ public class CopyPropogation extends Optimizer {
 					out += parts[0] + " := " + hm.get(matcher.group(1)) + "\n";
 					hm.put(parts[0], hm.get(matcher.group(1)));
 				} else{
+					out += line + "\n";
 					hm.put(parts[0], parts[1]);
 				}
 			} else {
