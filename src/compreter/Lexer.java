@@ -55,42 +55,49 @@ public class Lexer implements Patterns {
 		matcher = PUNCTUATORS.matcher(this.buffer);
 		if(matcher.matches()){
 			offset += matcher.end(1);
+			//System.out.println("Punctuator : " + matcher.group(1));
 			return new Symbol(Symbol.Id.PUNCTUATORS, matcher.group(1));
 		}
 		
 		matcher = KEYWORD.matcher(this.buffer);
 		if(matcher.matches()){
 			offset += matcher.end(1);
+			//System.out.println("Keyword : " + matcher.group(1));
 			return new Symbol(Symbol.Id.KEYWORD, matcher.group(1));
 		}
 		
 		matcher = NUMERIC_LITERAL.matcher(this.buffer);
 		if(matcher.matches()){
 			offset += matcher.end(1);
+			//System.out.println("Numerical literal : " + matcher.group(1));
 			return new Symbol(Symbol.Id.NUMERIC_LITERAL, matcher.group(1));
 		}
 		
 		matcher = FLOATINGPOINT_LITERAL.matcher(this.buffer);
 		if(matcher.matches()){
 			offset += matcher.end(1);
+			//System.out.println("Floating literal : " + matcher.group(1));
 			return new Symbol(Symbol.Id.FLOATINGPOINT_LITERAL, matcher.group(1));
 		}
 		
 		matcher = BOOLEAN_LITERAL.matcher(this.buffer);
 		if(matcher.matches()){
 			offset += matcher.end(1);
+			//System.out.println("Boolean literal : " + matcher.group(1));
 			return new Symbol(Symbol.Id.BOOLEAN_LITERAL, matcher.group(1));
 		}
 		
 		matcher = STRING_LITERAL.matcher(this.buffer);
 		if(matcher.matches()){
 			offset += matcher.end(1) + 1;//plus one is to skip " (inverted commas)
+			//System.out.println("String literal : " + matcher.group(1));
 			return new Symbol(Symbol.Id.STRING_LITERAL, matcher.group(1));
 		}
 		
 		matcher = IDENTIFIER_NAME.matcher(this.buffer);
 		if(matcher.matches()){
 			offset += matcher.end(1);
+			//System.out.println("Identifier name : " + matcher.group(1));
 			return new Symbol(Symbol.Id.IDENTIFIER_NAME, matcher.group(1));
 		}
 		
