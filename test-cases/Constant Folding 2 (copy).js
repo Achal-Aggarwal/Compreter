@@ -1,0 +1,1 @@
+function C(A){var B;B=920.0*A;return 48.0+B};C(2)

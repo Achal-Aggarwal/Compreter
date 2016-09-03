@@ -1,0 +1,1 @@
+function A(){return 6};A()

@@ -1,0 +1,1 @@
+function B(A){return 1};B(true)

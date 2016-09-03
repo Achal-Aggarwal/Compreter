@@ -1,0 +1,1 @@
+function C(A){var B;B=60*A;return A/B};C(45)

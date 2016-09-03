@@ -1,0 +1,1 @@
+function A(){return 124.799995};A()
